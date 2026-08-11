@@ -1,0 +1,33 @@
+name: Rendimientos carteras
+
+on:
+  schedule:
+    - cron: "20 12 * * 1-5"    # 09:20 Argentina (UTC-3), lunes a viernes
+  workflow_dispatch:            # boton para correrlo a mano
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -q -r requirements.txt
+
+      - name: Actualizar el Sheet
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          SHEET_URL:  ${{ secrets.SHEET_URL }}
+        run: python rendimientos.py
+
+      - name: Guardar el grafico como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: grafico-carteras
+          path: carteras.png
+          if-no-files-found: warn
