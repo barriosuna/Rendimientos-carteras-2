@@ -72,27 +72,59 @@ def limpiar_vtt(texto):
         fuera.append(l)
     return re.sub(r"\s+", " ", " ".join(fuera)).strip()
 
+def _via_api(video_id):
+    """Vía 1: youtube-transcript-api. Usa un endpoint distinto al de yt-dlp."""
+    from youtube_transcript_api import YouTubeTranscriptApi as YTA
+    idiomas = [i.strip() for i in IDIOMAS.split(",")]
+    try:                                          # versiones 1.x
+        return [t.text for t in YTA().fetch(video_id, languages=idiomas)]
+    except (AttributeError, TypeError):           # versiones 0.6.x
+        return [t["text"] for t in YTA.get_transcript(video_id, languages=idiomas)]
+
 
 def bajar_transcripcion(video):
-    """Descarga los subtítulos automáticos con yt-dlp. Devuelve texto plano o None."""
+    """Intenta dos vías distintas y deja registro de por qué falla cada una."""
+    # ---------- vía 1: API de transcripciones ----------
+    try:
+        partes = _via_api(video["id"])
+        texto = re.sub(r"\[[^\]]*\]", "", " ".join(partes))
+        texto = re.sub(r"\s+", " ", texto).strip()
+        if texto:
+            print(f"  · via API: {len(texto):,} caracteres")
+            return texto
+        print("  [1] la API devolvio texto vacio")
+    except Exception as e:
+        print(f"  [1] API falló -> {type(e).__name__}: {str(e)[:200]}")
+
+    # ---------- diagnóstico: ¿existen subtítulos? ----------
+    d = subprocess.run(["yt-dlp", "--list-subs", "--skip-download", "--no-warnings", video["url"]],
+                       capture_output=True, text=True, timeout=180)
+    pistas = [l for l in d.stdout.splitlines() if l.strip()][:12]
+    print("  [diagnostico] pistas de subtitulos que ve yt-dlp:")
+    for l in pistas:
+        print("     ", l[:120])
+    if d.stderr.strip():
+        print("     stderr:", d.stderr.strip().splitlines()[-1][:200])
+
+    # ---------- vía 2: yt-dlp ----------
     destino = f"/tmp/{video['id']}"
     for f in glob.glob(destino + "*"):
         os.remove(f)
     cmd = ["yt-dlp", "--skip-download", "--write-auto-subs", "--write-subs",
            "--sub-langs", IDIOMAS, "--sub-format", "vtt/best",
-           "--no-warnings", "--retries", "3", "-o", destino, video["url"]]
+           "--extractor-args", "youtube:player_client=android,web",
+           "--no-warnings", "--retries", "5", "-o", destino, video["url"]]
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
     archivos = glob.glob(destino + "*.vtt")
     if not archivos:
-        print(f"  [!] sin subtítulos para «{video['titulo']}»")
+        print(f"  [2] yt-dlp tampoco pudo con «{video['titulo']}»")
         if r.stderr:
-            print("      ", r.stderr.strip().splitlines()[-1][:200])
+            print("     ", r.stderr.strip().splitlines()[-1][:200])
         return None
     with open(archivos[0], encoding="utf-8", errors="ignore") as fh:
         texto = limpiar_vtt(fh.read())
-    print(f"  · {len(texto):,} caracteres")
+    print(f"  · via yt-dlp: {len(texto):,} caracteres")
     return texto
-
 
 def main():
     videos = episodios_recientes()
