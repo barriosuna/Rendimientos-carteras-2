@@ -17,7 +17,7 @@ jobs:
           cache: pip
 
       - name: Instalar dependencias
-        run: pip install -q yt-dlp gspread google-auth
+        run: pip install -q yt-dlp youtube-transcript-api gspread google-auth
 
       - name: Bajar transcripcion y escribir al Sheet
         env:
