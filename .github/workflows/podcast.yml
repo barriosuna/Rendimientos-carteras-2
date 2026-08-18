@@ -2,12 +2,13 @@ name: Transcripcion The Compound
 
 on:
   schedule:
-    - cron: "0 12 * * 1-5"     # 09:00 Argentina, antes que el resto
+    - cron: "0 11 * * 1-5"     # 08:00 Argentina: transcribir tarda, hay que empezar temprano
   workflow_dispatch:
 
 jobs:
   transcribir:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -17,9 +18,17 @@ jobs:
           cache: pip
 
       - name: Instalar dependencias
-        run: pip install -q yt-dlp youtube-transcript-api gspread google-auth
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install -q faster-whisper gspread google-auth
 
-      - name: Bajar transcripcion y escribir al Sheet
+      - name: Cachear el modelo de Whisper
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-base-v1
+
+      - name: Transcribir y escribir al Sheet
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           SHEET_URL:  ${{ secrets.SHEET_URL }}
