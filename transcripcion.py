@@ -12,9 +12,10 @@ from email.utils import parsedate_to_datetime
 FEEDS = {
     "The Compound and Friends": "https://feeds.megaphone.fm/TCP4771071679",
     "Animal Spirits":           "https://feeds.megaphone.fm/TCP6464651487",
+    "Odd Lots":                 "https://omny.fm/shows/odd-lots/playlists/podcast.rss",
 }
-HORAS      = 30        # antiguedad maxima del episodio
-MAX_EPS    = 2         # cuantos episodios transcribir como mucho por corrida
+HORAS      = 96        # 4 dias: asi el lunes levanta lo que salio el viernes
+MAX_EPS    = 3         # hasta 3 episodios por corrida
 MODELO     = "base"    # tiny = mas rapido y peor; base = equilibrio; small = mejor y lento
 HOJA       = "podcast"
 CHUNK      = 40000     # una celda de Sheets aguanta 50.000 caracteres
