@@ -1,153 +1,143 @@
 """
-Baja la transcripción del último episodio de The Compound y la escribe en el Sheet.
-Usa los mismos secrets que rendimientos.py: SHEET_URL y GCP_SA_KEY.
+Transcribe los episodios recientes de los podcasts de The Compound y los escribe en el Sheet.
+No usa YouTube: baja el MP3 del feed RSS de audio y lo transcribe con faster-whisper.
+Secrets: SHEET_URL y GCP_SA_KEY.
 """
-import os, sys, json, re, subprocess, glob, urllib.request
+import os, sys, json, re, gc, urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 
 # ------------------------------ AJUSTES ------------------------------
-CANAL_ID   = "UCBRpqrzuuqE8TZcWw75JSdw"   # The Compound
-HORAS      = 36        # antigüedad máxima del episodio a buscar
-MAX_VIDEOS = 2         # cuántos episodios recientes bajar como mucho
-IDIOMAS    = "en,en-US,en-GB"
+FEEDS = {
+    "The Compound and Friends": "https://feeds.megaphone.fm/TCP4771071679",
+    "Animal Spirits":           "https://feeds.megaphone.fm/TCP6464651487",
+}
+HORAS      = 30        # antiguedad maxima del episodio
+MAX_EPS    = 2         # cuantos episodios transcribir como mucho por corrida
+MODELO     = "base"    # tiny = mas rapido y peor; base = equilibrio; small = mejor y lento
 HOJA       = "podcast"
 CHUNK      = 40000     # una celda de Sheets aguanta 50.000 caracteres
+MAX_MB     = 250       # no bajar audios mas grandes que esto
 
 SHEET_URL = os.environ.get("SHEET_URL", "")
 SA_KEY    = os.environ.get("GCP_SA_KEY", "")
 if not SHEET_URL or not SA_KEY:
     sys.exit("Faltan los secrets SHEET_URL y/o GCP_SA_KEY.")
 
-NS = {"atom": "http://www.w3.org/2005/Atom",
-      "media": "http://search.yahoo.com/mrss/",
-      "yt": "http://www.youtube.com/xml/schemas/2015"}
+UA = {"User-Agent": "Mozilla/5.0 (compatible; LBFinanzasBot/1.0)"}
+
+
+def limpiar_html(texto):
+    if not texto:
+        return ""
+    texto = re.sub(r"<br\s*/?>", " ", texto)
+    texto = re.sub(r"<[^>]+>", " ", texto)
+    texto = (texto.replace("&amp;", "&").replace("&lt;", "<")
+                  .replace("&gt;", ">").replace("&nbsp;", " ").replace("&#39;", "'"))
+    return re.sub(r"\s+", " ", texto).strip()
 
 
 def episodios_recientes():
-    """Lee el feed RSS del canal y devuelve los videos publicados dentro de la ventana."""
-    url = f"https://www.youtube.com/feeds/videos.xml?channel_id={CANAL_ID}"
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        raiz = ET.fromstring(r.read())
-
+    """Recorre los feeds y devuelve los episodios publicados dentro de la ventana."""
     corte, salida = datetime.now(timezone.utc) - timedelta(hours=HORAS), []
-    for e in raiz.findall("atom:entry", NS):
-        publicado = datetime.fromisoformat(e.find("atom:published", NS).text)
-        if publicado < corte:
+    for programa, url in FEEDS.items():
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=60) as r:
+                raiz = ET.fromstring(r.read())
+        except Exception as e:
+            print(f"[!] No se pudo leer el feed de {programa}: {e}")
             continue
-        desc = e.find("media:group/media:description", NS)
-        salida.append({
-            "id":        e.find("yt:videoId", NS).text,
-            "titulo":    e.find("atom:title", NS).text,
-            "publicado": publicado,
-            "url":       f"https://www.youtube.com/watch?v={e.find('yt:videoId', NS).text}",
-            "desc":      (desc.text or "")[:2000] if desc is not None else "",
-        })
-    return sorted(salida, key=lambda v: v["publicado"], reverse=True)[:MAX_VIDEOS]
 
-
-def limpiar_vtt(texto):
-    """Convierte un .vtt de subtítulos automáticos en texto corrido sin repeticiones."""
-    lineas = []
-    for linea in texto.splitlines():
-        linea = linea.strip()
-        if (not linea or linea.startswith(("WEBVTT", "Kind:", "Language:", "NOTE"))
-                or "-->" in linea or linea.isdigit()):
-            continue
-        linea = re.sub(r"<[^>]+>", "", linea)
-        linea = re.sub(r"\[[^\]]*\]", "", linea)
-        linea = re.sub(r"\s+", " ", linea).strip()
-        if linea and (not lineas or linea != lineas[-1]):
-            lineas.append(linea)
-
-    fuera = []
-    for l in lineas:
-        if fuera and (fuera[-1].endswith(l) or l.startswith(fuera[-1][-40:])):
-            solapado = fuera[-1][-40:]
-            if l.startswith(solapado):
-                l = l[len(solapado):].strip()
-            if not l:
+        for item in raiz.findall(".//channel/item"):
+            fecha_txt = item.findtext("pubDate")
+            if not fecha_txt:
                 continue
-        fuera.append(l)
-    return re.sub(r"\s+", " ", " ".join(fuera)).strip()
+            try:
+                publicado = parsedate_to_datetime(fecha_txt)
+            except Exception:
+                continue
+            if publicado.tzinfo is None:
+                publicado = publicado.replace(tzinfo=timezone.utc)
+            if publicado < corte:
+                continue
 
-def _via_api(video_id):
-    """Vía 1: youtube-transcript-api. Usa un endpoint distinto al de yt-dlp."""
-    from youtube_transcript_api import YouTubeTranscriptApi as YTA
-    idiomas = [i.strip() for i in IDIOMAS.split(",")]
-    try:                                          # versiones 1.x
-        return [t.text for t in YTA().fetch(video_id, languages=idiomas)]
-    except (AttributeError, TypeError):           # versiones 0.6.x
-        return [t["text"] for t in YTA.get_transcript(video_id, languages=idiomas)]
+            enc = item.find("enclosure")
+            if enc is None or not enc.get("url"):
+                continue
+            salida.append({
+                "programa":  programa,
+                "titulo":    (item.findtext("title") or "").strip(),
+                "publicado": publicado,
+                "audio":     enc.get("url"),
+                "pagina":    (item.findtext("link") or "").strip(),
+                "desc":      limpiar_html(item.findtext("description"))[:3000],
+            })
+    return sorted(salida, key=lambda e: e["publicado"], reverse=True)[:MAX_EPS]
 
 
-def bajar_transcripcion(video):
-    """Intenta dos vías distintas y deja registro de por qué falla cada una."""
-    # ---------- vía 1: API de transcripciones ----------
-    try:
-        partes = _via_api(video["id"])
-        texto = re.sub(r"\[[^\]]*\]", "", " ".join(partes))
-        texto = re.sub(r"\s+", " ", texto).strip()
-        if texto:
-            print(f"  · via API: {len(texto):,} caracteres")
-            return texto
-        print("  [1] la API devolvio texto vacio")
-    except Exception as e:
-        print(f"  [1] API falló -> {type(e).__name__}: {str(e)[:200]}")
+def bajar_audio(ep, destino):
+    req = urllib.request.Request(ep["audio"], headers=UA)
+    with urllib.request.urlopen(req, timeout=600) as r, open(destino, "wb") as fh:
+        leido = 0
+        while True:
+            trozo = r.read(1 << 20)
+            if not trozo:
+                break
+            leido += len(trozo)
+            if leido > MAX_MB * 1024 * 1024:
+                raise RuntimeError(f"audio mayor a {MAX_MB} MB, se descarta")
+            fh.write(trozo)
+    print(f"  audio: {leido / 1024 / 1024:.1f} MB")
 
-    # ---------- diagnóstico: ¿existen subtítulos? ----------
-    d = subprocess.run(["yt-dlp", "--list-subs", "--skip-download", "--no-warnings", video["url"]],
-                       capture_output=True, text=True, timeout=180)
-    pistas = [l for l in d.stdout.splitlines() if l.strip()][:12]
-    print("  [diagnostico] pistas de subtitulos que ve yt-dlp:")
-    for l in pistas:
-        print("     ", l[:120])
-    if d.stderr.strip():
-        print("     stderr:", d.stderr.strip().splitlines()[-1][:200])
 
-    # ---------- vía 2: yt-dlp ----------
-    destino = f"/tmp/{video['id']}"
-    for f in glob.glob(destino + "*"):
-        os.remove(f)
-    cmd = ["yt-dlp", "--skip-download", "--write-auto-subs", "--write-subs",
-           "--sub-langs", IDIOMAS, "--sub-format", "vtt/best",
-           "--extractor-args", "youtube:player_client=android,web",
-           "--no-warnings", "--retries", "5", "-o", destino, video["url"]]
-    r = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
-    archivos = glob.glob(destino + "*.vtt")
-    if not archivos:
-        print(f"  [2] yt-dlp tampoco pudo con «{video['titulo']}»")
-        if r.stderr:
-            print("     ", r.stderr.strip().splitlines()[-1][:200])
-        return None
-    with open(archivos[0], encoding="utf-8", errors="ignore") as fh:
-        texto = limpiar_vtt(fh.read())
-    print(f"  · via yt-dlp: {len(texto):,} caracteres")
-    return texto
+def transcribir(ruta):
+    from faster_whisper import WhisperModel
+    modelo = WhisperModel(MODELO, device="cpu", compute_type="int8")
+    segmentos, info = modelo.transcribe(ruta, beam_size=1, vad_filter=True,
+                                        condition_on_previous_text=False)
+    print(f"  idioma detectado: {info.language} · duracion: {info.duration/60:.0f} min")
+    texto = " ".join(s.text.strip() for s in segmentos)
+    del modelo
+    gc.collect()
+    return re.sub(r"\s+", " ", texto).strip()
+
 
 def main():
-    videos = episodios_recientes()
-    if not videos:
-        print(f"No hay episodios nuevos en las últimas {HORAS} horas.")
-        filas = [["(sin episodios nuevos)", "", datetime.now(timezone.utc)
-                  .strftime("%d/%m/%Y %H:%M UTC"), "", "", ""]]
+    episodios = episodios_recientes()
+    ahora = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M UTC")
+    filas = []
+
+    if not episodios:
+        print(f"Sin episodios nuevos en las ultimas {HORAS} horas.")
+        filas = [["(sin episodios nuevos)", "", "", ahora, "", "", ""]]
     else:
-        filas = []
-        for v in videos:
-            print(f"Bajando: {v['titulo']}")
-            texto = bajar_transcripcion(v)
+        for ep in episodios:
+            print(f"\n{ep['programa']} — {ep['titulo']}")
+            publicado = ep["publicado"].strftime("%d/%m/%Y %H:%M UTC")
+            ruta = "/tmp/episodio.mp3"
+            texto = ""
+            try:
+                bajar_audio(ep, ruta)
+                texto = transcribir(ruta)
+                print(f"  transcripcion: {len(texto):,} caracteres")
+            except Exception as e:
+                print(f"  [!] fallo la transcripcion: {e}")
+            finally:
+                if os.path.exists(ruta):
+                    os.remove(ruta)
+
             if not texto:
+                filas.append([ep["programa"], ep["titulo"], ep["pagina"], publicado,
+                              ep["desc"], "sin transcripcion", ""])
                 continue
-            trozos = [texto[i:i + CHUNK] for i in range(0, len(texto), CHUNK)] or [""]
+
+            trozos = [texto[i:i + CHUNK] for i in range(0, len(texto), CHUNK)]
             for n, trozo in enumerate(trozos, 1):
-                filas.append([v["titulo"], v["url"],
-                              v["publicado"].strftime("%d/%m/%Y %H:%M UTC"),
-                              v["desc"] if n == 1 else "",
+                filas.append([ep["programa"], ep["titulo"], ep["pagina"], publicado,
+                              ep["desc"] if n == 1 else "",
                               f"{n}/{len(trozos)}", trozo])
-        if not filas:
-            filas = [["(episodios encontrados pero sin subtítulos)", "", datetime.now(timezone.utc)
-                      .strftime("%d/%m/%Y %H:%M UTC"), "", "", ""]]
 
     import gspread
     from google.oauth2.service_account import Credentials
@@ -158,14 +148,16 @@ def main():
                 "https://www.googleapis.com/auth/drive"])
     sh = gspread.authorize(creds).open_by_url(SHEET_URL)
 
-    encabezado = ["Titulo", "URL", "Publicado", "Descripcion", "Parte", "Transcripcion"]
+    encabezado = ["Programa", "Titulo", "Pagina", "Publicado", "Descripcion",
+                  "Parte", "Transcripcion"]
     try:
         ws = sh.worksheet(HOJA); ws.clear()
     except gspread.WorksheetNotFound:
-        ws = sh.add_worksheet(title=HOJA, rows=max(len(filas) + 10, 50), cols=8)
+        ws = sh.add_worksheet(title=HOJA, rows=max(len(filas) + 10, 50), cols=9)
     ws.update(values=[encabezado] + filas, range_name="A1")
 
-    print(f"\nListo · {len(filas)} filas en la hoja «{HOJA}»\n{sh.url}")
+    con_texto = sum(1 for f in filas if f[6])
+    print(f"\nListo · {len(filas)} filas en «{HOJA}» ({con_texto} con transcripcion)\n{sh.url}")
 
 
 if __name__ == "__main__":
