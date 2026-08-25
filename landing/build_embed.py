@@ -56,6 +56,44 @@ def escopar(sel):
     return ",".join(f"{CONTENEDOR} {s.strip()}" for s in sel.split(",") if s.strip())
 
 
+
+def escudo_de_clases(reglas, contenedor):
+    """
+    Las clases del widget (card, cards, chip, wrap...) son genericas y colisionan
+    con el sistema de diseno del sitio anfitrion. Nuestras reglas solo ganan en
+    las propiedades que declaramos: si Webflow define `.card{display:none}` y
+    nosotros nunca declaramos display, gana Webflow y la ficha desaparece.
+
+    Este escudo neutraliza, para cada clase que usamos, las propiedades capaces
+    de ocultar o descolocar un elemento. Va ANTES de las reglas propias, que son
+    igual de especificas pero posteriores, asi que las pisan cuando corresponde.
+    `display:revert` devuelve el valor del navegador (block para div, inline para
+    span), no un valor fijo que romperia los inline.
+    """
+    clases = sorted(set(re.findall(r"\.([a-zA-Z][\w-]*)", "\n".join(reglas))))
+    if not clases:
+        return ""
+    sel = ",".join(f"{contenedor} .{c}" for c in clases)
+    # !important porque el anfitrion puede usarlo. Las reglas propias tambien lo
+    # llevan (ver marcar_importante) y, con igual peso, gana la posterior: la nuestra.
+    return (sel + "{display:revert!important;visibility:visible!important;"
+            "opacity:1!important;position:static!important;float:none!important;"
+            "clear:none!important;width:auto!important;height:auto!important;"
+            "max-height:none!important;min-height:0!important;transform:none!important;"
+            "clip-path:none!important;overflow:visible!important}\n")
+
+
+def marcar_importante(regla):
+    """Refuerza las propiedades que el escudo neutraliza, para que la regla propia
+    vuelva a imponerse sobre el escudo y sobre cualquier !important del anfitrion."""
+    return re.sub(
+        r"\b(display|visibility|opacity|position|float|width|height|max-height|"
+        r"min-height|transform|overflow)\s*:\s*([^;}!]+)(?=[;}])",
+        lambda m: f"{m.group(1)}:{m.group(2).strip()}!important",
+        regla,
+    )
+
+
 def construir_css(css):
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
     out = []
@@ -100,7 +138,10 @@ def construir_css(css):
         "@media (prefers-reduced-motion:reduce){"
         + CONTENEDOR + " *{animation:none!important;transition:none!important}}\n"
     )
-    return "/*! LB Finanzas — widget Estrategias de inversión. GENERADO: no editar. */\n" + base + "\n".join(out) + "\n"
+    escudo = escudo_de_clases(out, CONTENEDOR)
+    out = [marcar_importante(r) for r in out]
+    return ("/*! LB Finanzas — widget Estrategias de inversión. GENERADO: no editar. */\n"
+            + base + escudo + "\n".join(out) + "\n")
 
 
 PLANTILLA_JS = """/*!
