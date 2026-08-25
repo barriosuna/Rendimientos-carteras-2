@@ -8,6 +8,8 @@ on:
 jobs:
   actualizar:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write           # necesario para el commit de la landing
     steps:
       - uses: actions/checkout@v4
 
@@ -32,30 +34,28 @@ jobs:
           path: carteras.png
           if-no-files-found: warn
 
+      # ─── landing "Estrategias de inversion" ───────────────────────────────
 
-# 1. Al nivel del job, junto a `runs-on`:
-permissions:
-  contents: write
+      - name: Dependencias de la landing
+        run: pip install -q -r landing/requirements.txt
 
-# 2. Al final de la lista de `steps` del job:
-steps:
-  - name: Dependencias de la landing
-    run: pip install -r landing/requirements.txt
+      - name: Generar la landing
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          SHEET_URL:  ${{ secrets.SHEET_URL }}
+        run: python landing/build.py
 
-  - name: Generar la landing
-    env:
-      SHEET_ID: ${{ secrets.SHEET_ID }}
-      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-    run: python landing/build.py
+      # Si la hoja `control` dice que la ultima rueda esta vieja, build.py sale
+      # con codigo 1 y el job se corta aca: no se commitea ni se publica nada.
 
-  - name: Commit si cambió algo
-    run: |
-      if git diff --quiet -- public/index.html; then
-        echo "Sin cambios en la landing, no se commitea."
-        exit 0
-      fi
-      git config user.name  "github-actions[bot]"
-      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      git add public/index.html
-      git commit -m "landing: rendimientos al $(date -u +%d/%m/%Y) [skip ci]"
-      git push
+      - name: Commit si cambio algo
+        run: |
+          if git diff --quiet -- public/index.html; then
+            echo "Sin cambios en la landing, no se commitea."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/index.html
+          git commit -m "landing: rendimientos al $(date -u +%d/%m/%Y) [skip ci]"
+          git push
