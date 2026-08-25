@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estrategias de inversión · LB Finanzas</title>
+<meta name="description" content="Todas las estrategias de inversión de LB Finanzas, con su rendimiento en el día, el mes, los últimos 3 meses, el año y los últimos 12 meses.">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#522398">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --violeta:#522398;
+  --violeta-medio:#5632b2;
+  --acento:#8555ff;
+  --lavanda:#f4e9fe;
+  --verde:#73ffa1;
+  --negro:#2c2b2e;
+  --blanco:#fbfafd;
+  --fondo:#f7f7f7;
+  --gris:#6b6678;
+  --gris-claro:#9990a8;
+  --linea:#e7e3ee;
+  --rojo:#e0466b;
+  --verde-texto:#12855a;
+  --grad:linear-gradient(135deg,#522398 0%,#5632b2 55%,#8555ff 100%);
+  --radio:16px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  margin:0;background:var(--fondo);color:var(--negro);
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+a{color:var(--violeta)}
+:focus-visible{outline:3px solid var(--acento);outline-offset:3px;border-radius:6px}
+
+/* ---------- NAV ---------- */
+.nav{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #efecf4;box-shadow:0 2px 6px rgba(44,43,46,.045)}
+.nav-in{max-width:1180px;margin:0 auto;padding:24px;display:flex;align-items:center;gap:24px}
+.nav-logo{display:flex;align-items:center;flex:0 0 auto}
+.nav-logo img{height:26px;width:auto;display:block}
+.nav-links{display:flex;align-items:center;gap:26px;flex:1;min-width:0}
+.nav-links a{font-size:14px;font-weight:600;color:var(--gris);text-decoration:none;white-space:nowrap}
+.nav-links a:hover{color:var(--violeta)}
+.nav-links a[aria-current="page"]{color:var(--violeta);font-weight:700}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--violeta);background-image:var(--grad);color:#fff;padding:72px 0 76px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-140px;top:-140px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.05)}
+.hero-in{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:0 24px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:2.2px;color:var(--verde);margin:0 0 18px}
+.hero h1{font-size:clamp(38px,6vw,62px);line-height:1.04;font-weight:800;letter-spacing:-1.6px;margin:0 0 20px;max-width:15ch}
+.hero p{font-size:clamp(16px,2vw,19px);line-height:1.6;color:#e4d9f8;max-width:60ch;margin:0}
+
+/* ---------- SECCIONES ---------- */
+section{padding:64px 0}
+.sec-h{margin:0 0 6px;font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.8px}
+.sec-b{margin:0 0 34px;font-size:15.5px;color:var(--gris);max-width:62ch}
+
+/* ---------- TERMÓMETRO ---------- */
+.termo{background:var(--negro);border-radius:22px;padding:34px 30px 30px;color:#fff}
+.termo-top{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between;margin-bottom:28px}
+.termo-top h3{margin:0 0 4px;font-size:19px;font-weight:700;color:#fff}
+.termo-top p{margin:0;font-size:13.5px;color:#a9a3b8}
+.ventanas{display:flex;flex-wrap:wrap;gap:6px;background:rgba(255,255,255,.07);padding:5px;border-radius:12px}
+.ventanas button{
+  border:0;background:transparent;color:#cfc8dd;font-family:inherit;font-size:13px;font-weight:700;
+  padding:9px 15px;border-radius:8px;cursor:pointer;transition:background .15s,color .15s;white-space:nowrap
+}
+.ventanas button:hover{color:#fff}
+.ventanas button[aria-selected="true"]{background:var(--acento);color:#fff}
+.barras{display:flex;flex-direction:column;gap:3px}
+.barra{
+  display:grid;grid-template-columns:150px 1fr 78px;align-items:center;gap:14px;
+  padding:9px 10px;border-radius:10px;background:transparent;border:0;width:100%;
+  color:inherit;font-family:inherit;text-align:left;cursor:pointer;text-decoration:none;transition:background .15s
+}
+.barra:hover{background:rgba(255,255,255,.06)}
+.barra-n{font-size:13.5px;font-weight:600;color:#efecf5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.barra-riel{position:relative;height:22px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
+.barra-cero{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.28)}
+.barra-f{position:absolute;top:3px;bottom:3px;border-radius:3px;transition:left .45s cubic-bezier(.4,0,.2,1),width .45s cubic-bezier(.4,0,.2,1)}
+.barra-v{font-size:14px;font-weight:800;text-align:right}
+.pos{color:var(--verde)}.neg{color:#ff8fa8}
+.termo-pie{margin:22px 0 0;font-size:12px;color:#8a8399}
+
+/* ---------- TABLA ---------- */
+.tabla-caja{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:660px}
+th,td{padding:13px 16px;text-align:right;font-size:14px;border-bottom:1px solid var(--linea)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:11.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--gris);background:#fcfbfe;position:sticky;top:0}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fbf9ff}
+td.nom a{font-weight:700;color:var(--negro);text-decoration:none}
+td.nom a:hover{color:var(--violeta)}
+td.nom small{display:block;font-weight:500;color:var(--gris-claro);font-size:12px}
+.v-pos{color:var(--verde-texto);font-weight:700}
+.v-neg{color:var(--rojo);font-weight:700}
+.v-cero{color:var(--gris)}
+th.ord{cursor:pointer;user-select:none;white-space:nowrap}
+th.ord:hover{color:var(--violeta)}
+th.ord[aria-sort]{color:var(--acento)}
+
+/* ---------- FILTROS ---------- */
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px}
+.filtros button{
+  border:1px solid var(--linea);background:#fff;color:var(--gris);font-family:inherit;
+  font-size:13px;font-weight:700;padding:9px 17px;border-radius:100px;cursor:pointer;transition:.15s
+}
+.filtros button:hover{border-color:var(--acento);color:var(--violeta)}
+.filtros button[aria-pressed="true"]{background:var(--violeta);border-color:var(--violeta);color:#fff}
+
+/* ---------- CARDS ---------- */
+.cards{display:flex;flex-direction:column;gap:26px}
+.card{background:#fff;border:1px solid var(--linea);border-radius:22px;overflow:hidden;scroll-margin-top:96px}
+.card[hidden]{display:none}
+.card-h{display:flex;gap:18px;align-items:flex-start;padding:28px 30px 22px;border-bottom:1px solid var(--linea)}
+.card-ico{width:52px;height:52px;flex:0 0 52px;border-radius:14px;background:var(--lavanda);display:flex;align-items:center;justify-content:center;padding:9px}
+.card-ico img{width:100%;height:100%;object-fit:contain}
+.card-tit{flex:1;min-width:0}
+.card-tit h3{margin:0 0 3px;font-size:23px;font-weight:800;letter-spacing:-.5px}
+.card-tit p{margin:0 0 11px;font-size:15px;color:var(--gris)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:100px;background:var(--lavanda);color:var(--violeta);letter-spacing:.2px}
+.chip.r-conservative{background:#e6f7ef;color:#12855a}
+.chip.r-moderate{background:#fff2dd;color:#9a6608}
+.chip.r-aggressive{background:#fde8ee;color:#c02a52}
+
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--linea)}
+.kpi{padding:18px 14px;text-align:center;border-right:1px solid var(--linea)}
+.kpi:last-child{border-right:0}
+.kpi.destacado{background:var(--lavanda)}
+.kpi-l{display:block;font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--gris-claro);margin-bottom:5px}
+.kpi-v{font-size:19px;font-weight:800;letter-spacing:-.4px}
+
+.card-b{display:grid;grid-template-columns:1.15fr .85fr;gap:0}
+.graf{padding:26px 30px;border-right:1px solid var(--linea)}
+.bloque-t{margin:0 0 3px;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--acento);text-transform:uppercase}
+.bloque-s{margin:0 0 16px;font-size:12.5px;color:var(--gris-claro)}
+.graf svg{width:100%;max-width:470px;height:auto;display:block}
+.act{padding:26px 30px}
+.act table{min-width:0}
+.act th,.act td{padding:9px 6px;font-size:13px}
+.act thead th{background:transparent;position:static;font-size:10.5px}
+.act td.tk{text-align:left}
+.act .tk b{font-weight:800;color:var(--negro)}
+.act .tk small{display:block;font-size:11px;color:var(--gris-claro);font-weight:500;line-height:1.35}
+.sd{color:var(--gris-claro);font-weight:500}
+.act-pie{margin:14px 0 0;font-size:11.5px;color:var(--gris-claro);line-height:1.5}
+
+.desc{padding:24px 30px 30px;border-top:1px solid var(--linea);background:#fcfbfe}
+.desc p{margin:0 0 12px;font-size:14.5px;line-height:1.7;color:#4a4653}
+.desc p:last-child{margin-bottom:0}
+.desc details summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--violeta);list-style:none;padding:4px 0}
+.desc details summary::-webkit-details-marker{display:none}
+.desc details summary::before{content:"▸ ";display:inline-block;transition:transform .2s}
+.desc details[open] summary::before{content:"▾ "}
+.desc details[open] summary{margin-bottom:12px}
+
+/* ---------- INVERSIÓN PROGRAMADA ---------- */
+.prog{display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between;
+  padding:18px 30px;background:var(--lavanda);border-top:1px solid #e3d5f7}
+.prog-txt{flex:1 1 340px;min-width:0}
+.prog-txt p{margin:0;font-size:13.5px;line-height:1.55;color:#4a4653}
+.prog-txt b{color:var(--violeta);font-weight:700}
+.frec{display:flex;gap:6px;flex:0 0 auto}
+.frec span{font-size:11.5px;font-weight:700;color:var(--violeta);background:#fff;
+  border:1px solid #e0cffa;border-radius:100px;padding:5px 13px;white-space:nowrap}
+@media (max-width:560px){.prog{padding:16px 20px}}
+
+/* ---------- CIERRE ---------- */
+.cierre{background:var(--violeta);background-image:linear-gradient(135deg,#522398 0%,#8555ff 100%);border-radius:22px;padding:44px 40px;color:#fff}
+.cierre h3{margin:0 0 12px;font-size:26px;font-weight:800;letter-spacing:-.6px}
+.cierre p{margin:0 0 26px;font-size:16px;line-height:1.65;color:#eee6fb;max-width:56ch}
+.btn{display:inline-block;padding:16px 40px;border-radius:10px;background:#fff;color:var(--violeta);font-size:15.5px;font-weight:800;text-decoration:none}
+.btn:hover{background:var(--verde);color:var(--negro)}
+
+.metodo{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);padding:28px 30px}
+.metodo h4{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--acento);text-transform:uppercase}
+.metodo p{margin:0 0 11px;font-size:13.5px;line-height:1.65;color:var(--gris)}
+.metodo p:last-child{margin-bottom:0}
+footer{padding:0 0 60px}
+
+@media (max-width:860px){
+  .card-b{grid-template-columns:1fr}
+  .graf{border-right:0;border-bottom:1px solid var(--linea)}
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .kpi{border-bottom:1px solid var(--linea)}
+  .kpi:nth-child(3){border-right:0}
+  .barra{grid-template-columns:120px 1fr 66px;gap:10px}
+  .nav-links{display:none}
+}
+@media (max-width:560px){
+  .wrap,.hero-in,.nav-in{padding-left:18px;padding-right:18px}
+  .nav-in{gap:12px;padding:20px 18px}
+  .nav-logo img{height:22px}
+    .hero{padding:52px 0 70px}
+  section{padding:46px 0}
+  .termo{padding:24px 18px}
+  .barra{grid-template-columns:1fr 62px;gap:8px;padding:8px}
+  .barra-riel{grid-column:1/-1;grid-row:2}
+  .barra-n{white-space:normal}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .kpi:nth-child(3){border-right:1px solid var(--linea)}
+  .kpi:nth-child(5){border-right:0}
+  .card-h,.graf,.act,.desc{padding-left:20px;padding-right:20px}
+  .cierre{padding:32px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="nav-logo" href="/" aria-label="LB Finanzas — inicio">
+      <img src="/assets/lb-logo.png" alt="LB Finanzas" width="217" height="26">
+    </a>
+    <!-- LINKS DE LA PLATAFORMA — reemplazar por los de la navbar general.
+         Los de abajo son un ejemplo de estructura, no los definitivos. -->
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/estrategias-de-inversion" aria-current="page">Estrategias</a>
+      <a href="/blog">Blog</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-in">
+    <p class="eyebrow">ESTRATEGIAS LB</p>
+    <h1>Estrategias de inversión</h1>
+    <p>Nueve carteras modelo, cada una construida para un objetivo distinto. Acá está cómo le fue a cada una: en el día, en el mes, en los últimos tres meses, en lo que va del año y en los últimos doce meses. Todo en dólares, con dividendos reinvertidos.</p>
+  </div>
+</header>
+
+
+<main>
+
+<section class="wrap" id="comparar">
+  <h2 class="sec-h">Cómo viene cada una</h2>
+  <p class="sec-b">Elegí una ventana de tiempo y mirá las nueve ordenadas de mejor a peor. Tocá cualquiera para ir a su ficha.</p>
+  <div class="termo">
+    <div class="termo-top">
+      <div>
+        <h3>El termómetro</h3>
+        <p id="termoSub">Rendimiento en los últimos 12 meses</p>
+      </div>
+      <div class="ventanas" role="tablist" aria-label="Ventana de tiempo">
+        <button role="tab" data-v="0">En el día</button>
+        <button role="tab" data-v="1">En el mes</button>
+        <button role="tab" data-v="2">3 meses</button>
+        <button role="tab" data-v="3">En el año</button>
+        <button role="tab" data-v="4" aria-selected="true">12 meses</button>
+      </div>
+    </div>
+    <div class="barras" id="barras"></div>
+    <p class="termo-pie">Rendimiento total en dólares, punto a punto, con dividendos reinvertidos. Cierre del viernes 21 de agosto de 2026.</p>
+  </div>
+</section>
+
+<section class="wrap" id="tabla">
+  <h2 class="sec-h">Todas las ventanas, todas las carteras</h2>
+  <p class="sec-b">Tocá el encabezado de cualquier columna para reordenar.</p>
+  <div class="tabla-caja">
+    <table id="tablaComp">
+      <thead>
+        <tr>
+          <th class="ord" data-c="-1" scope="col">Estrategia</th>
+          <th class="ord" data-c="0" scope="col">En el día</th>
+          <th class="ord" data-c="1" scope="col">En el mes</th>
+          <th class="ord" data-c="2" scope="col">3 meses</th>
+          <th class="ord" data-c="3" scope="col">En el año</th>
+          <th class="ord" data-c="4" aria-sort="descending" scope="col">12 meses</th>
+        </tr>
+      </thead>
+      <tbody id="tablaBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="wrap" id="estrategias">
+  <h2 class="sec-h">Las nueve estrategias</h2>
+  <p class="sec-b">Cada ficha tiene el rendimiento en las cinco ventanas, el gráfico de los últimos doce meses, los cinco activos de mayor peso y para quién está pensada. En todas podés invertir de una vez o programar un monto fijo que entre solo.</p>
+  <div class="filtros" id="filtros">
+    <button data-f="todas" aria-pressed="true">Todas</button>
+    <button data-f="conservative" aria-pressed="false">Conservadoras</button>
+    <button data-f="moderate" aria-pressed="false">Moderadas</button>
+    <button data-f="aggressive" aria-pressed="false">Agresivas</button>
+  </div>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section class="wrap">
+  <div class="cierre">
+    <h3>¿Cuál va con vos?</h3>
+    <p>La estrategia que más rindió no es necesariamente la que te conviene. Depende de en cuánto tiempo vas a necesitar la plata y de cuánto podés ver caer tu cartera sin vender. Y una vez elegida, no hace falta que estés encima: programás un monto fijo por día, por semana o por mes y listo.</p>
+    <a class="btn" href="#">Hablá con tu asesor</a>
+  </div>
+</section>
+
+<section class="wrap" id="metodologia" style="padding-top:26px">
+  <div class="metodo">
+    <h4>Cómo calculamos estos números</h4>
+    <p>Precios ajustados por dividendos y splits. El rendimiento de cada cartera es el promedio ponderado del rendimiento de sus activos, con los pesos normalizados al inicio de cada ventana — es decir, asumiendo rebalanceo. Todo expresado en dólares.</p>
+    <p><strong>“En el día” es la variación de la última rueda cerrada contra la anterior</strong>, no la jornada en curso. Las carteras modelo son ejemplos de asignación construidos por el equipo de Research de LB Finanzas: no son un producto administrado y no incluyen comisiones, impuestos ni costos de transacción.</p>
+    <p>Los rendimientos pasados no garantizan rendimientos futuros.</p>
+  </div>
+</section>
+
+</main>
+<footer></footer>
+
+<script>
+const VENTANAS = ['En el día','En el mes','Últimos 3 meses','En el año (YTD)','Últimos 12 meses'];
+const VENT_CORTA = ['Día','Mes','3M','Año','12M'];
+const ESTRATEGIAS = [
+ {
+  "id": "futuro-seguro",
+  "nombre": "Futuro seguro",
+  "subtitulo": "Busca asegurar grandes objetivos",
+  "icono": "https://static.letsbit.io/securities-icons/strategy3f.svg",
+  "riesgo": "Moderado",
+  "riesgoKey": "moderate",
+  "plazo": "Largo plazo",
+  "ret": [
+   0.48,
+   2.77,
+   1.74,
+   13.15,
+   20.28
+  ],
+  "activos": [
+   {
+    "t": "VTI",
+    "peso": 60.0,
+    "nombre": "Acciones EE.UU. (mercado total)",
+    "r12m": 20.26
+   },
+   {
+    "t": "VXUS",
+    "peso": 30.0,
+    "nombre": "Acciones fuera de EE.UU.",
+    "r12m": 26.46
+   },
+   {
+    "t": "BND",
+    "peso": 10.0,
+    "nombre": "Bonos EE.UU.",
+    "r12m": 1.82
+   }
+  ],
+  "totalActivos": 3,
+  "descripcion": [
+   "Estrategia de inversión apuntada al largo plazo. Es ideal para juntar dinero para cumplir objetivos grandes como la compra de un auto, una casa, una maestría o tu jubilación. Está basada en “Three fund portfolio”, una cartera de inversión famosa de EE.UU, muy usada por los seguidores de John Bogle, el fundador de Vanguard.",
+   "Consiste en la inversión en tres ETF (fondos de inversión): un fondo de acciones de Estados Unidos (VTI), un fondo de acciones de otros países desarrollados y emergentes y un fondo de bonos en dólares.",
+   "Con los fondos 1 y 2, estamos básicamente invirtiendo en acciones de todo el mundo. En vez de elegir una empresa, la cual puede fallar, estamos invirtiendo en la economía global y su crecimiento de la mano de la innovación tecnológica. La función del fondo 3, que invierte en bonos, es disminuir la volatilidad de nuestra cartera. Como los bonos son más estables que las acciones, tener bonos hace que nuestra cartera de inversión se mueva de una forma más previsible y que en los momentos que baje la bolsa, baje mucho menos."
+  ],
+  "serie": null
+ },
+ {
+  "id": "maximo-potencial",
+  "nombre": "Máximo potencial",
+  "subtitulo": "Riesgo alto en busca del máximo potencial en USD.",
+  "icono": "https://s3.us-east-2.amazonaws.com/static.letsbit.io/securities-promo/max_power.svg",
+  "riesgo": "Agresivo",
+  "riesgoKey": "aggressive",
+  "plazo": "Largo plazo",
+  "ret": [
+   0.41,
+   4.52,
+   -0.62,
+   27.02,
+   46.62
+  ],
+  "activos": [
+   {
+    "t": "QQQ",
+    "peso": 30.0,
+    "nombre": "Nasdaq 100",
+    "r12m": 25.68
+   },
+   {
+    "t": "SMH",
+    "peso": 25.0,
+    "nombre": "Semiconductores",
+    "r12m": 93.66
+   },
+   {
+    "t": "VUG",
+    "peso": 20.0,
+    "nombre": "Acciones de crecimiento",
+    "r12m": 14.97
+   },
+   {
+    "t": "IWO",
+    "peso": 15.0,
+    "nombre": "Small caps de crecimiento",
+    "r12m": 26.51
+   },
+   {
+    "t": "XBI",
+    "peso": 10.0,
+    "nombre": "Biotecnología",
+    "r12m": 85.3
+   }
+  ],
+  "totalActivos": 5,
+  "descripcion": [
+   "Estrategia de máximo potencial de crecimiento, concentrada en sectores y empresas que lideran la innovación tecnológica y las grandes tendencias estructurales de la economía moderna. Combina tecnología de gran capitalización, semiconductores, innovación disruptiva y biotecnología a través de los principales ETFs del mercado.",
+   "Pensada para inversores con alta tolerancia al riesgo que buscan maximizar el crecimiento de su capital en dólares y están dispuestos a asumir mayor volatilidad a cambio de un rendimiento esperado superior al promedio del mercado."
+  ],
+  "serie": null
+ },
+ {
+  "id": "rendimientos-extra",
+  "nombre": "Rendimientos extra",
+  "subtitulo": "Inversión según 4 factores",
+  "icono": "https://static.letsbit.io/securities-icons/strategyfactor.svg",
+  "riesgo": "Agresivo",
+  "riesgoKey": "aggressive",
+  "plazo": "Mediano plazo",
+  "ret": [
+   0.38,
+   3.21,
+   1.81,
+   25.8,
+   35.05
+  ],
+  "activos": [
+   {
+    "t": "VB",
+    "peso": 25.0,
+    "nombre": "Small caps EE.UU.",
+    "r12m": 22.33
+   },
+   {
+    "t": "MTUM",
+    "peso": 25.0,
+    "nombre": "Factor momentum",
+    "r12m": 26.1
+   },
+   {
+    "t": "QUAL",
+    "peso": 25.0,
+    "nombre": "Factor calidad",
+    "r12m": 19.26
+   },
+   {
+    "t": "VLUE",
+    "peso": 25.0,
+    "nombre": "Factor valor",
+    "r12m": 72.5
+   }
+  ],
+  "totalActivos": 4,
+  "descripcion": [
+   "Estrategia de inversión que no busca replicar el mercado en general, sino elegir empresas que cuenten con “factores” que históricamente han generado un rendimiento extra al mercado según distintos estudios de especialistas en finanzas (“factor premium”).",
+   "Los factores utilizados son:",
+   "1. Valor: toma el supuesto de que las acciones “baratas” según métricas fundamentales como el ratio precio-ganancias rinden mejor que las acciones “caras”.",
+   "2. Tamaño: toma el supuesto de que empresas pequeñas históricamente rinden mejor que empresas grandes.",
+   "3. Momentum: toma el supuesto de que acciones ganadoras tienden a seguir ganando.",
+   "4. Calidad: toma el supuesto de que empresas de calidad (márgenes altos, bajo apalancamiento, ROE alto, etc) tienden a rendir más que sus opuestas.",
+   "Para seleccionar empresas que cumplen estos factores, la cartera toma ETFs (fondos de inversión) de las principales gestoras mundiales que seleccionan sólo activos que cumplen estas condiciones."
+  ],
+  "serie": null
+ },
+ {
+  "id": "revolucion-ia",
+  "nombre": "Revolución IA",
+  "subtitulo": "La cadena completa de la inteligencia artificial",
+  "icono": "https://s3.us-east-2.amazonaws.com/static.letsbit.io/securities-promo/ia_revolution.svg",
+  "riesgo": "Agresivo",
+  "riesgoKey": "aggressive",
+  "plazo": "Largo plazo",
+  "ret": [
+   -0.18,
+   5.37,
+   -4.58,
+   25.28,
+   38.04
+  ],
+  "activos": [
+   {
+    "t": "NVDA",
+    "peso": 25.0,
+    "nombre": "Nvidia",
+    "r12m": 23.44
+   },
+   {
+    "t": "CHAT",
+    "peso": 25.0,
+    "nombre": "Inteligencia artificial (temático)",
+    "r12m": 68.3
+   },
+   {
+    "t": "SMH",
+    "peso": 20.0,
+    "nombre": "Semiconductores",
+    "r12m": 93.66
+   },
+   {
+    "t": "IGV",
+    "peso": 20.0,
+    "nombre": "Software",
+    "r12m": -4.36
+   },
+   {
+    "t": "VST",
+    "peso": 10.0,
+    "nombre": "Vistra (energía eléctrica)",
+    "r12m": -27.6
+   }
+  ],
+  "totalActivos": 5,
+  "descripcion": [
+   "Cartera temática enfocada en capturar el ciclo completo de la revolución de la inteligencia artificial: desde los fabricantes de semiconductores que habilitan el cómputo, pasando por los proveedores de infraestructura de datacenters y energía eléctrica, hasta las empresas de software que monetizan aplicaciones de IA y la ciberseguridad que las protege.",
+   "La tesis central es que la IA representa una transformación tecnológica comparable a la electricidad o internet, y sus beneficios económicos se distribuyen a lo largo de toda la cadena de valor. Pensada para inversores con alta tolerancia al riesgo que buscan capitalizar el crecimiento estructural de la inteligencia artificial."
+  ],
+  "serie": null
+ },
+ {
+  "id": "ingreso-estable",
+  "nombre": "Ingreso estable",
+  "subtitulo": "Rendimiento en USD con mínima volatilidad",
+  "icono": "https://s3.us-east-2.amazonaws.com/static.letsbit.io/securities-promo/steady_income.svg",
+  "riesgo": "Conservador",
+  "riesgoKey": "conservative",
+  "plazo": "Mediano plazo",
+  "ret": [
+   -0.05,
+   0.22,
+   -0.18,
+   0.66,
+   2.26
+  ],
+  "activos": [
+   {
+    "t": "SGOV",
+    "peso": 40.0,
+    "nombre": "Letras del Tesoro (0-3 meses)",
+    "r12m": 3.7
+   },
+   {
+    "t": "SHY",
+    "peso": 25.0,
+    "nombre": "Tesoro EE.UU. 1-3 años",
+    "r12m": 2.44
+   },
+   {
+    "t": "LQD",
+    "peso": 20.0,
+    "nombre": "Corporativos grado de inversión",
+    "r12m": 0.92
+   },
+   {
+    "t": "IEF",
+    "peso": 10.0,
+    "nombre": "Tesoro EE.UU. 7-10 años",
+    "r12m": 0.33
+   },
+   {
+    "t": "TLT",
+    "peso": 5.0,
+    "nombre": "Tesoro EE.UU. +20 años",
+    "r12m": -0.92
+   }
+  ],
+  "totalActivos": 5,
+  "descripcion": [
+   "Estrategia diseñada para generar un rendimiento estable en dólares con la menor volatilidad posible. Combina bonos del Tesoro de Estados Unidos de corto plazo como base de liquidez y seguridad, bonos corporativos de empresas estadounidenses de máxima calidad crediticia para capturar rendimiento adicional con riesgo controlado, y una pequeña exposición a bonos de mayor duración para beneficiarse ante una potencial baja de tasas de la Reserva Federal. Es ideal para inversores que priorizan la preservación del capital por encima del crecimiento, que ya tienen dólares y quieren hacerlos rendir con un bajo riesgo."
+  ],
+  "serie": null
+ },
+ {
+  "id": "michael-burry-tematica",
+  "nombre": "Michael Burry",
+  "subtitulo": "Cartera basada en Scion Asset Management",
+  "icono": "https://s3.us-east-2.amazonaws.com/static.letsbit.io/securities-promo/bear.svg",
+  "riesgo": "Agresivo",
+  "riesgoKey": "aggressive",
+  "plazo": "Largo plazo",
+  "ret": [
+   2.81,
+   2.07,
+   9.1,
+   -7.04,
+   -11.58
+  ],
+  "activos": [
+   {
+    "t": "MOH",
+    "peso": 43.49,
+    "nombre": "Molina Healthcare",
+    "r12m": 10.76
+   },
+   {
+    "t": "LULU",
+    "peso": 32.35,
+    "nombre": "Lululemon",
+    "r12m": -40.12
+   },
+   {
+    "t": "SLM",
+    "peso": 24.16,
+    "nombre": "SLM Corporation",
+    "r12m": -13.59
+   }
+  ],
+  "totalActivos": 3,
+  "descripcion": [
+   "Cartera de inversión temática basada en la tenencia reportada del fondo de inversión gestionado por Michael Burry (Scion Asset Management).",
+   "Michael Burry es uno de los “contrarian investors” mas reconocidos de las últimas décadas. Saltó a la fama tras la crisis inmobiliaria del 2008 donde su fondo obtuvo grandes retornos tras apostar contra el mercado de Real Estate. Es la inspiración de la película “The Big Short”.",
+   "Aclaraciones:",
+   "Los porcentajes solo muestran la tenencia en acciones y ETFs de acciones. La tenencia de bonos y efectivo no esta incluida. A su vez, la tenencia se construye en base a la información publica de reportes financieros la cual tiene un retraso promedio de un trimestre. Esta cartera replica posiciones históricas y no representa recomendaciones de inversión actuales de Michael Burry."
+  ],
+  "serie": null
+ },
+ {
+  "id": "mercados-emergentes",
+  "nombre": "Mercados Emergentes",
+  "subtitulo": "Crecimiento Global",
+  "icono": "https://s3.us-east-2.amazonaws.com/static.letsbit.io/securities-promo/emergent.svg",
+  "riesgo": "Agresivo",
+  "riesgoKey": "aggressive",
+  "plazo": "Largo plazo",
+  "ret": [
+   0.96,
+   1.37,
+   -0.74,
+   16.81,
+   31.89
+  ],
+  "activos": [
+   {
+    "t": "MCHI",
+    "peso": 25.0,
+    "nombre": "Acciones de China",
+    "r12m": -7.5
+   },
+   {
+    "t": "INDA",
+    "peso": 18.0,
+    "nombre": "Acciones de India",
+    "r12m": -4.5
+   },
+   {
+    "t": "EWZ",
+    "peso": 15.0,
+    "nombre": "Acciones de Brasil",
+    "r12m": 24.18
+   },
+   {
+    "t": "EWT",
+    "peso": 12.0,
+    "nombre": "Acciones de Taiwán",
+    "r12m": 85.47
+   },
+   {
+    "t": "EWY",
+    "peso": 10.0,
+    "nombre": "Acciones de Corea del Sur",
+    "r12m": 152.42
+   }
+  ],
+  "totalActivos": 8,
+  "descripcion": [
+   "Cartera de inversión temática que busca capturar el potencial de crecimiento de las economías emergentes a nivel mundial. Esta estrategia se enfoca en países con economías en desarrollo y rápido crecimiento, principalmente en Asia, América Latina, Europa del Este y África.",
+   "Los mercados emergentes incluyen 24 países en desarrollo con economías volátiles y de rápido crecimiento.",
+   "Composición estratégica: La cartera combina ETFs diversificados de mercados emergentes globales con exposiciones regionales específicas y acciones individuales de empresas líderes en sectores de alto crecimiento como tecnología, comercio electrónico y semiconductores.",
+   "Aclaraciones: Los mercados emergentes presentan mayor volatilidad, riesgo cambiario y político comparado con mercados desarrollados. Los rendimientos pueden verse afectados por factores geopolíticos, fluctuaciones de commodities y políticas monetarias de países desarrollados. Esta cartera temática conlleva riesgos elevados incluyendo volatilidad extrema, riesgo cambiario, político y de liquidez. Recomendada para inversores con alta tolerancia al riesgo y horizonte de inversión de largo plazo."
+  ],
+  "serie": null
+ },
+ {
+  "id": "dividendos",
+  "nombre": "Dividendos",
+  "subtitulo": "Ingresos regulares en USD",
+  "icono": "https://static.letsbit.io/securities-icons/strategydividend.svg",
+  "riesgo": "Agresivo",
+  "riesgoKey": "aggressive",
+  "plazo": "Largo plazo",
+  "ret": [
+   0.76,
+   2.88,
+   6.0,
+   18.02,
+   23.29
+  ],
+  "activos": [
+   {
+    "t": "SCHD",
+    "peso": 25.0,
+    "nombre": "Dividendos de calidad",
+    "r12m": 30.37
+   },
+   {
+    "t": "VIG",
+    "peso": 25.0,
+    "nombre": "Dividendos crecientes",
+    "r12m": 17.53
+   },
+   {
+    "t": "DGRO",
+    "peso": 20.0,
+    "nombre": "Crecimiento de dividendos",
+    "r12m": 21.46
+   },
+   {
+    "t": "IDVO",
+    "peso": 15.0,
+    "nombre": "Dividendos internacionales + opciones",
+    "r12m": 28.36
+   },
+   {
+    "t": "DIVO",
+    "peso": 15.0,
+    "nombre": "Dividendos + covered calls",
+    "r12m": 18.45
+   }
+  ],
+  "totalActivos": 5,
+  "descripcion": [
+   "Diseñada para quienes buscan generar ingresos en dólares de forma regular, la Cartera Cash Flow+ combina acciones de empresas que reparten dividendos altos y sostenidos con otras que tienen un historial probado de crecimiento constante de dividendos.",
+   "Gracias a una cuidadosa selección de ETFs líderes como SCHD, DIVO y SPYD, esta cartera ofrece flujo de efectivo atractivo hoy, mientras incorpora fondos como VIG y DGRO que apuntan a aumentar ese ingreso en el tiempo.",
+   "Ideal para quienes valoran la estabilidad, la calidad empresarial y la generación de renta pasiva en USD."
+  ],
+  "serie": null
+ },
+ {
+  "id": "anticrisis",
+  "nombre": "Anticrisis",
+  "subtitulo": "Preservación de tu plata",
+  "icono": "https://static.letsbit.io/securities-icons/strategypermanent.svg",
+  "riesgo": "Conservador",
+  "riesgoKey": "conservative",
+  "plazo": "Largo plazo",
+  "ret": [
+   0.59,
+   4.28,
+   0.87,
+   5.66,
+   14.64
+  ],
+  "activos": [
+   {
+    "t": "VTI",
+    "peso": 25.0,
+    "nombre": "Acciones EE.UU. (mercado total)",
+    "r12m": 20.26
+   },
+   {
+    "t": "GLD",
+    "peso": 25.0,
+    "nombre": "Oro físico",
+    "r12m": 33.1
+   },
+   {
+    "t": "SGOV",
+    "peso": 25.0,
+    "nombre": "Letras del Tesoro (0-3 meses)",
+    "r12m": 3.7
+   },
+   {
+    "t": "BND",
+    "peso": 15.0,
+    "nombre": "Bonos EE.UU.",
+    "r12m": 1.82
+   },
+   {
+    "t": "BNDX",
+    "peso": 10.0,
+    "nombre": "Bonos globales cubiertos",
+    "r12m": 1.05
+   }
+  ],
+  "totalActivos": 5,
+  "descripcion": [
+   "Estrategia de inversión diseñada para sobrevivir y rendir en cualquier situación económica: auges, recesiones, crisis o inflación. Es una reversión de “la cartera permanente” de Harry Browne, la misma ofrece rendimientos moderados pero consistentes ante distintas situaciones que típicamente son malas para las inversiones bursátiles.",
+   "Es una cartera de largo plazo (+5 años) para perfiles moderados que priorizan la preservación de su dinero frente al crecimiento.",
+   "La cartera contiene acciones (bueno en auges), oro (bueno en crisis e inflación), bonos largos (ideales en bajas de tasas o deflación), bonos de corto plazo (estabilidad y liquidez para aprovechar oportunidades)."
+  ],
+  "serie": null
+ }
+];
+
+const fmt = n => (n>0?'+':'') + n.toFixed(2).replace('.',',') + '%';
+const cls = n => n>0?'pos':(n<0?'neg':'');
+const clsT = n => n>0?'v-pos':(n<0?'v-neg':'v-cero');
+
+/* ---------- TERMÓMETRO ---------- */
+let ventanaActiva = 4;
+
+function pintarBarras(){
+  const cont = document.getElementById('barras');
+  const orden = [...ESTRATEGIAS].sort((a,b)=>b.ret[ventanaActiva]-a.ret[ventanaActiva]);
+  const vals = orden.map(e=>e.ret[ventanaActiva]);
+  const min = Math.min(0,...vals), max = Math.max(0,...vals);
+  const span = (max-min) || 1;
+  const cero = (0-min)/span*100;
+
+  cont.innerHTML = orden.map(e=>{
+    const v = e.ret[ventanaActiva];
+    const x = (v-min)/span*100;
+    const left = Math.min(cero,x), w = Math.max(Math.abs(x-cero),0.6);
+    const color = v>=0 ? 'var(--verde)' : '#ff8fa8';
+    return `<a class="barra" href="#${e.id}">
+      <span class="barra-n">${e.nombre}</span>
+      <span class="barra-riel">
+        <span class="barra-cero" style="left:${cero}%"></span>
+        <span class="barra-f" style="left:${left}%;width:${w}%;background:${color}"></span>
+      </span>
+      <span class="barra-v num ${cls(v)}">${fmt(v)}</span>
+    </a>`;
+  }).join('');
+
+  document.getElementById('termoSub').textContent = 'Rendimiento ' +
+    (ventanaActiva===0?'en el día':ventanaActiva===1?'en el mes':ventanaActiva===2?'en los últimos 3 meses':ventanaActiva===3?'en lo que va del año':'en los últimos 12 meses');
+}
+
+document.querySelectorAll('.ventanas button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.ventanas button').forEach(x=>x.setAttribute('aria-selected','false'));
+    b.setAttribute('aria-selected','true');
+    ventanaActiva = +b.dataset.v;
+    pintarBarras();
+  });
+});
+pintarBarras();
+
+/* ---------- TABLA ---------- */
+let ordCol = 4, ordDesc = true;
+
+function pintarTabla(){
+  const orden = [...ESTRATEGIAS].sort((a,b)=>{
+    if(ordCol===-1) return ordDesc ? b.nombre.localeCompare(a.nombre) : a.nombre.localeCompare(b.nombre);
+    return ordDesc ? b.ret[ordCol]-a.ret[ordCol] : a.ret[ordCol]-b.ret[ordCol];
+  });
+  document.getElementById('tablaBody').innerHTML = orden.map(e=>
+    `<tr><td class="nom"><a href="#${e.id}">${e.nombre}</a><small>${e.riesgo} · ${e.plazo.toLowerCase()}</small></td>` +
+    e.ret.map(v=>`<td class="num ${clsT(v)}">${fmt(v)}</td>`).join('') + '</tr>'
+  ).join('');
+}
+
+document.querySelectorAll('#tablaComp th.ord').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const c = +th.dataset.c;
+    if(c===ordCol){ ordDesc = !ordDesc; } else { ordCol = c; ordDesc = true; }
+    document.querySelectorAll('#tablaComp th.ord').forEach(x=>x.removeAttribute('aria-sort'));
+    th.setAttribute('aria-sort', ordDesc?'descending':'ascending');
+    pintarTabla();
+  });
+});
+pintarTabla();
+
+/* ---------- GRÁFICO ----------
+   Si la estrategia trae `serie` (array de {f:'YYYY-MM-DD', v:<base 100>}),
+   dibuja la curva de 12 meses. Si no, cae al gráfico de las cinco ventanas.
+   Cargar `serie` no requiere ningún otro cambio en la página.            */
+
+function grafSerie(e){
+  const W=420,H=200,P={t:14,r:10,b:24,l:38};
+  const vs=e.serie.map(p=>p.v), min=Math.min(...vs), max=Math.max(...vs);
+  const pad=(max-min)*0.12||1, lo=min-pad, hi=max+pad;
+  const X=i=>P.l+i/(e.serie.length-1)*(W-P.l-P.r);
+  const Y=v=>P.t+(hi-v)/(hi-lo)*(H-P.t-P.b);
+  const d=e.serie.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+  const area=d+` L${X(e.serie.length-1).toFixed(1)} ${H-P.b} L${P.l} ${H-P.b} Z`;
+  const sube=vs[vs.length-1]>=vs[0], col=sube?'#12855a':'#e0466b';
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución de ${e.nombre} en los últimos 12 meses">
+    <defs><linearGradient id="g-${e.id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${col}" stop-opacity=".22"/><stop offset="100%" stop-color="${col}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <line x1="${P.l}" y1="${Y(100)}" x2="${W-P.r}" y2="${Y(100)}" stroke="#e7e3ee" stroke-dasharray="3 3"/>
+    <path d="${area}" fill="url(#g-${e.id})"/>
+    <path d="${d}" fill="none" stroke="${col}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+    <text x="4" y="${Y(hi).toFixed(1)+8}" font-size="10" fill="#9990a8">${hi.toFixed(0)}</text>
+    <text x="4" y="${Y(lo).toFixed(1)}" font-size="10" fill="#9990a8">${lo.toFixed(0)}</text>
+  </svg>`;
+}
+
+function grafVentanas(e){
+  const W=420,H=214,P={t:18,r:8,b:48,l:8};
+  const vs=e.ret, min=Math.min(0,...vs), max=Math.max(0,...vs), span=(max-min)||1;
+  const bw=(W-P.l-P.r)/vs.length, gap=bw*0.32;
+  const Y=v=>P.t+(max-v)/span*(H-P.t-P.b);
+  const y0=Y(0);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Rendimiento de ${e.nombre} por ventana de tiempo">
+    <line x1="${P.l}" y1="${y0.toFixed(1)}" x2="${W-P.r}" y2="${y0.toFixed(1)}" stroke="#d8d3e2"/>
+    ${vs.map((v,i)=>{
+      const x=P.l+i*bw+gap/2, w=bw-gap;
+      const y=Math.min(y0,Y(v)), h=Math.max(Math.abs(Y(v)-y0),1.5);
+      const col = i===4 ? '#8555ff' : (v>=0?'#c9b8ee':'#f2b9c8');
+      const ty = v>=0 ? y-7 : y+h+14;
+      return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${col}"/>
+        <text x="${(x+w/2).toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="middle" font-size="11" font-weight="800" fill="${i===4?'#522398':'#6b6678'}">${fmt(v)}</text>
+        <text x="${(x+w/2).toFixed(1)}" y="${H-10}" text-anchor="middle" font-size="11" font-weight="${i===4?700:500}" fill="#9990a8">${VENT_CORTA[i]}</text>`;
+    }).join('')}
+  </svg>`;
+}
+
+/* ---------- CARDS ---------- */
+document.getElementById('cards').innerHTML = ESTRATEGIAS.map(e=>{
+  const kpis = e.ret.map((v,i)=>
+    `<div class="kpi${i===4?' destacado':''}">
+       <span class="kpi-l">${VENT_CORTA[i]}</span>
+       <span class="kpi-v num ${clsT(v)}">${fmt(v)}</span>
+     </div>`).join('');
+
+  const filas = e.activos.map(a=>
+    `<tr>
+      <td class="tk"><b>${a.t}</b>${a.nombre?`<small>${a.nombre}</small>`:''}</td>
+      <td class="num">${a.peso.toString().replace('.',',')}%</td>
+      <td class="num ${a.r12m===null?'sd':clsT(a.r12m)}">${a.r12m===null?'s/d':fmt(a.r12m)}</td>
+    </tr>`).join('');
+
+  const resto = e.totalActivos>5 ? `Se muestran los 5 activos de mayor peso de un total de ${e.totalActivos}.` : `La cartera tiene ${e.totalActivos} activos: están todos.`;
+
+  const [primero,...siguientes] = e.descripcion;
+  const desc = `<p>${primero}</p>` + (siguientes.length
+    ? `<details><summary>Seguir leyendo</summary>${siguientes.map(p=>`<p>${p}</p>`).join('')}</details>`
+    : '');
+
+  const tieneSerie = Array.isArray(e.serie) && e.serie.length>1;
+
+  return `<article class="card" id="${e.id}" data-riesgo="${e.riesgoKey}">
+    <div class="card-h">
+      <div class="card-ico">${e.icono?`<img src="${e.icono}" alt="" loading="lazy">`:''}</div>
+      <div class="card-tit">
+        <h3>${e.nombre}</h3>
+        <p>${e.subtitulo}</p>
+        <div class="chips">
+          <span class="chip r-${e.riesgoKey}">Riesgo ${e.riesgo.toLowerCase()}</span>
+          <span class="chip">${e.plazo}</span>
+          <span class="chip">${e.totalActivos} activos</span>
+        </div>
+      </div>
+    </div>
+    <div class="kpis">${kpis}</div>
+    <div class="card-b">
+      <div class="graf">
+        <p class="bloque-t">Últimos 12 meses</p>
+        <p class="bloque-s">${tieneSerie ? 'Base 100 al inicio del período.' : 'Rendimiento acumulado en cada ventana. La barra violeta son los 12 meses.'}</p>
+        ${tieneSerie ? grafSerie(e) : grafVentanas(e)}
+      </div>
+      <div class="act">
+        <p class="bloque-t">Top 5 activos</p>
+        <p class="bloque-s">Por peso dentro de la cartera.</p>
+        <table>
+          <thead><tr><th scope="col">Activo</th><th scope="col">Peso</th><th scope="col">12M</th></tr></thead>
+          <tbody>${filas}</tbody>
+        </table>
+        <p class="act-pie">${resto}</p>
+      </div>
+    </div>
+    <div class="desc">${desc}</div>
+    <div class="prog">
+      <div class="prog-txt">
+        <p>🔁 En LB podés poner un monto fijo en <b>${e.nombre}</b> y que se invierta solo, sin que tengas que acordarte.</p>
+      </div>
+      <div class="frec"><span>Todos los días</span><span>Todas las semanas</span><span>Todos los meses</span></div>
+    </div>
+  </article>`;
+}).join('');
+
+/* ---------- FILTROS ---------- */
+document.querySelectorAll('#filtros button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('#filtros button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    const f = b.dataset.f;
+    document.querySelectorAll('.card').forEach(c=>{
+      c.hidden = !(f==='todas' || c.dataset.riesgo===f);
+    });
+  });
+});
+</script>
+</body>
+</html>
