@@ -68,6 +68,33 @@ python landing/build.py
 python -m http.server 8000 --directory public   # http://localhost:8000
 ```
 
+## La página de DCA
+
+`public/dca.html` + `embed/dca.css` + `embed/dca.js`. La calculadora corre sobre
+`public/api/sp500.json`, que `build.py` baja de Yahoo (SPY mensual ajustado) en
+cada corrida. Si esa descarga falla, **el build no se corta**: deja un aviso y
+queda el JSON anterior, porque la página de estrategias no depende de eso.
+
+⚠️ **En el primer deploy `api/sp500.json` no existe todavía.** La calculadora va
+a mostrar su mensaje de error hasta que corra el workflow una vez. Es esperable.
+
+El rendimiento anualizado de la tabla de escenarios es una **TIR**, no
+`(valor/aportado)^(1/años)`. En DCA cada aporte estuvo invertido un tiempo
+distinto, así que el segundo cálculo da un número más bajo y engañoso.
+
+## Regenerar los embeds
+
+`landing/template.html` es la fuente del diseño de la página de estrategias.
+Después de tocarla:
+
+```bash
+python landing/build_embed.py
+```
+
+Eso reescribe `public/embed/estrategias.css` y `.js`: les saca la navbar y el
+hero (en Webflow los pone el sitio) y escopa el CSS bajo `#lb-estrategias` para
+que no choque con los estilos de Webflow. **No editar esos dos archivos a mano.**
+
 ## Pendiente: el gráfico de 12 meses
 
 Hoy los nueve gráficos son barras por ventana, porque el Sheet no guarda serie

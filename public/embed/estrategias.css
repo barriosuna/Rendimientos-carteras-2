@@ -1,0 +1,113 @@
+/*! LB Finanzas — widget Estrategias de inversión. GENERADO: no editar. */
+#lb-estrategias{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:16px;line-height:1.6;color:#2c2b2e;-webkit-font-smoothing:antialiased}
+#lb-estrategias *{box-sizing:border-box}
+#lb-estrategias a{color:var(--violeta)}
+#lb-estrategias :focus-visible{outline:3px solid var(--acento);outline-offset:3px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){#lb-estrategias *{animation:none!important;transition:none!important}}
+#lb-estrategias{--violeta:#522398; --violeta-medio:#5632b2; --acento:#8555ff; --lavanda:#f4e9fe; --verde:#73ffa1; --negro:#2c2b2e; --blanco:#fbfafd; --fondo:#f7f7f7; --gris:#6b6678; --gris-claro:#9990a8; --linea:#e7e3ee; --rojo:#e0466b; --verde-texto:#12855a; --grad:linear-gradient(135deg,#522398 0%,#5632b2 55%,#8555ff 100%); --radio:16px;}
+#lb-estrategias .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+#lb-estrategias .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+#lb-estrategias section{padding:64px 0}
+#lb-estrategias section:first-of-type .sec-h{margin-top:0}
+#lb-estrategias .sec-h{margin:40px 0 6px;font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.8px}
+#lb-estrategias .sec-b{margin:0 0 34px;font-size:15.5px;color:var(--gris);max-width:62ch}
+#lb-estrategias .termo{background:var(--negro);border-radius:22px;padding:34px 30px 30px;color:#fff}
+#lb-estrategias .termo-top{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between;margin-bottom:28px}
+#lb-estrategias .termo-top h3{margin:0 0 4px;font-size:19px;font-weight:700;color:#fff}
+#lb-estrategias .termo-top p{margin:0;font-size:13.5px;color:#a9a3b8}
+#lb-estrategias .ventanas{display:flex;flex-wrap:wrap;gap:6px;background:rgba(255,255,255,.07);padding:5px;border-radius:12px}
+#lb-estrategias .ventanas button{border:0;background:transparent;color:#cfc8dd;font-family:inherit;font-size:13px;font-weight:700;  padding:9px 15px;border-radius:8px;cursor:pointer;transition:background .15s,color .15s;white-space:nowrap}
+#lb-estrategias .ventanas button:hover{color:#fff}
+#lb-estrategias .ventanas button[aria-selected="true"]{background:var(--acento);color:#fff}
+#lb-estrategias .barras{display:flex;flex-direction:column;gap:3px}
+#lb-estrategias .barra{display:grid;grid-template-columns:150px 1fr 78px;align-items:center;gap:14px;  padding:9px 10px;border-radius:10px;background:transparent;border:0;width:100%;  color:inherit;font-family:inherit;text-align:left;cursor:pointer;text-decoration:none;transition:background .15s}
+#lb-estrategias .barra:hover{background:rgba(255,255,255,.06)}
+#lb-estrategias .barra-n{font-size:13.5px;font-weight:600;color:#efecf5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#lb-estrategias .barra-riel{position:relative;height:22px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden}
+#lb-estrategias .barra-cero{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.28)}
+#lb-estrategias .barra-f{position:absolute;top:3px;bottom:3px;border-radius:3px;transition:left .45s cubic-bezier(.4,0,.2,1),width .45s cubic-bezier(.4,0,.2,1)}
+#lb-estrategias .barra-v{font-size:14px;font-weight:800;text-align:right}
+#lb-estrategias .pos{color:var(--verde)}
+#lb-estrategias .neg{color:#ff8fa8}
+#lb-estrategias .termo-pie{margin:22px 0 0;font-size:12px;color:#8a8399}
+#lb-estrategias .tabla-caja{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);overflow-x:auto}
+#lb-estrategias table{width:100%;border-collapse:collapse;min-width:660px}
+#lb-estrategias th,#lb-estrategias td{padding:13px 16px;text-align:right;font-size:14px;border-bottom:1px solid var(--linea)}
+#lb-estrategias th:first-child,#lb-estrategias td:first-child{text-align:left}
+#lb-estrategias thead th{font-size:11.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--gris);background:#fcfbfe;position:sticky;top:0}
+#lb-estrategias tbody tr:last-child td{border-bottom:0}
+#lb-estrategias tbody tr:hover{background:#fbf9ff}
+#lb-estrategias td.nom a{font-weight:700;color:var(--negro);text-decoration:none}
+#lb-estrategias td.nom a:hover{color:var(--violeta)}
+#lb-estrategias td.nom small{display:block;font-weight:500;color:var(--gris-claro);font-size:12px}
+#lb-estrategias .v-pos{color:var(--verde-texto);font-weight:700}
+#lb-estrategias .v-neg{color:var(--rojo);font-weight:700}
+#lb-estrategias .v-cero{color:var(--gris)}
+#lb-estrategias th.ord{cursor:pointer;user-select:none;white-space:nowrap}
+#lb-estrategias th.ord:hover{color:var(--violeta)}
+#lb-estrategias th.ord[aria-sort]{color:var(--acento)}
+#lb-estrategias .filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px}
+#lb-estrategias .filtros button{border:1px solid var(--linea);background:#fff;color:var(--gris);font-family:inherit;  font-size:13px;font-weight:700;padding:9px 17px;border-radius:100px;cursor:pointer;transition:.15s}
+#lb-estrategias .filtros button:hover{border-color:var(--acento);color:var(--violeta)}
+#lb-estrategias .filtros button[aria-pressed="true"]{background:var(--violeta);border-color:var(--violeta);color:#fff}
+#lb-estrategias .cards{display:flex;flex-direction:column;gap:26px;margin-bottom:26px}
+#lb-estrategias .card{background:#fff;border:1px solid var(--linea);border-radius:22px;overflow:hidden;scroll-margin-top:96px}
+#lb-estrategias .card[hidden]{display:none}
+#lb-estrategias .card-h{display:flex;gap:18px;align-items:flex-start;padding:28px 30px 22px;border-bottom:1px solid var(--linea)}
+#lb-estrategias .card-ico{width:52px;height:52px;flex:0 0 52px;border-radius:14px;background:var(--lavanda);display:flex;align-items:center;justify-content:center;padding:9px}
+#lb-estrategias .card-ico img{width:100%;height:100%;object-fit:contain}
+#lb-estrategias .card-tit{flex:1;min-width:0}
+#lb-estrategias .card-tit h3{margin:0 0 3px;font-size:23px;font-weight:800;letter-spacing:-.5px}
+#lb-estrategias .card-tit p{margin:0 0 11px;font-size:15px;color:var(--gris)}
+#lb-estrategias .chips{display:flex;flex-wrap:wrap;gap:7px}
+#lb-estrategias .chip{font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:100px;background:var(--lavanda);color:var(--violeta);letter-spacing:.2px}
+#lb-estrategias .chip.r-conservative{background:#e6f7ef;color:#12855a}
+#lb-estrategias .chip.r-moderate{background:#fff2dd;color:#9a6608}
+#lb-estrategias .chip.r-aggressive{background:#fde8ee;color:#c02a52}
+#lb-estrategias .kpis{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--linea)}
+#lb-estrategias .kpi{padding:18px 14px;text-align:center;border-right:1px solid var(--linea)}
+#lb-estrategias .kpi:last-child{border-right:0}
+#lb-estrategias .kpi.destacado{background:var(--lavanda)}
+#lb-estrategias .kpi-l{display:block;font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--gris-claro);margin-bottom:5px}
+#lb-estrategias .kpi-v{font-size:19px;font-weight:800;letter-spacing:-.4px}
+#lb-estrategias .card-b{display:grid;grid-template-columns:1.15fr .85fr;gap:0}
+#lb-estrategias .graf{padding:26px 30px;border-right:1px solid var(--linea)}
+#lb-estrategias .bloque-t{margin:0 0 3px;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--acento);text-transform:uppercase}
+#lb-estrategias .bloque-s{margin:0 0 16px;font-size:12.5px;color:var(--gris-claro)}
+#lb-estrategias .graf svg{width:100%;max-width:470px;height:auto;display:block}
+#lb-estrategias .act{padding:26px 30px}
+#lb-estrategias .act table{min-width:0}
+#lb-estrategias .act th,#lb-estrategias .act td{padding:9px 6px;font-size:13px}
+#lb-estrategias .act thead th{background:transparent;position:static;font-size:10.5px}
+#lb-estrategias .act td.tk{text-align:left}
+#lb-estrategias .act .tk b{font-weight:800;color:var(--negro)}
+#lb-estrategias .act .tk small{display:block;font-size:11px;color:var(--gris-claro);font-weight:500;line-height:1.35}
+#lb-estrategias .sd{color:var(--gris-claro);font-weight:500}
+#lb-estrategias .act-pie{margin:14px 0 0;font-size:11.5px;color:var(--gris-claro);line-height:1.5}
+#lb-estrategias .desc{padding:24px 30px 30px;border-top:1px solid var(--linea);background:#fcfbfe}
+#lb-estrategias .desc p{margin:0 0 12px;font-size:14.5px;line-height:1.7;color:#4a4653}
+#lb-estrategias .desc p:last-child{margin-bottom:0}
+#lb-estrategias .desc details summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--violeta);list-style:none;padding:4px 0}
+#lb-estrategias .desc details summary::-webkit-details-marker{display:none}
+#lb-estrategias .desc details summary::before{content:"▸ ";display:inline-block;transition:transform .2s}
+#lb-estrategias .desc details[open] summary::before{content:"▾ "}
+#lb-estrategias .desc details[open] summary{margin-bottom:12px}
+#lb-estrategias .prog{display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between;  padding:18px 30px;background:var(--lavanda);border-top:1px solid #e3d5f7}
+#lb-estrategias .prog-txt{flex:1 1 340px;min-width:0}
+#lb-estrategias .prog-txt p{margin:0;font-size:13.5px;line-height:1.55;color:#4a4653}
+#lb-estrategias .prog-txt b{color:var(--violeta);font-weight:700}
+#lb-estrategias .frec{display:flex;gap:6px;flex:0 0 auto}
+#lb-estrategias .frec span{font-size:11.5px;font-weight:700;color:var(--violeta);background:#fff;  border:1px solid #e0cffa;border-radius:100px;padding:5px 13px;white-space:nowrap}
+@media (max-width:560px){#lb-estrategias .prog{padding:16px 20px}}
+#lb-estrategias .cierre{background:var(--violeta);background-image:linear-gradient(135deg,#522398 0%,#8555ff 100%);border-radius:22px;padding:44px 40px;margin-top:22px;color:#fff}
+#lb-estrategias .cierre h3{margin:0 0 12px;font-size:26px;font-weight:800;letter-spacing:-.6px}
+#lb-estrategias .cierre p{margin:0 0 26px;font-size:16px;line-height:1.65;color:#eee6fb;max-width:56ch}
+#lb-estrategias .btn{display:inline-block;padding:16px 40px;border-radius:10px;background:#fff;color:var(--violeta);font-size:15.5px;font-weight:800;text-decoration:none}
+#lb-estrategias .btn:hover{background:var(--verde);color:var(--negro)}
+#lb-estrategias .metodo{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);padding:28px 30px}
+#lb-estrategias .metodo h4{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--acento);text-transform:uppercase}
+#lb-estrategias .metodo p{margin:0 0 11px;font-size:13.5px;line-height:1.65;color:var(--gris)}
+#lb-estrategias .metodo p:last-child{margin-bottom:0}
+#lb-estrategias footer{padding:0 0 60px}
+@media (max-width:860px){#lb-estrategias .card-b{grid-template-columns:1fr}#lb-estrategias .graf{border-right:0;border-bottom:1px solid var(--linea)}#lb-estrategias .kpis{grid-template-columns:repeat(3,1fr)}#lb-estrategias .kpi{border-bottom:1px solid var(--linea)}#lb-estrategias .kpi:nth-child(3){border-right:0}#lb-estrategias .barra{grid-template-columns:120px 1fr 66px;gap:10px}}
+@media (max-width:560px){#lb-estrategias section{padding:46px 0}#lb-estrategias .sec-h{margin-top:26px}#lb-estrategias .termo{padding:24px 18px}#lb-estrategias .barra{grid-template-columns:1fr 62px;gap:8px;padding:8px}#lb-estrategias .barra-riel{grid-column:1/-1;grid-row:2}#lb-estrategias .barra-n{white-space:normal}#lb-estrategias .kpis{grid-template-columns:repeat(2,1fr)}#lb-estrategias .kpi:nth-child(3){border-right:1px solid var(--linea)}#lb-estrategias .kpi:nth-child(5){border-right:0}#lb-estrategias .card-h,#lb-estrategias .graf,#lb-estrategias .act,#lb-estrategias .desc{padding-left:20px;padding-right:20px}#lb-estrategias .cierre{padding:32px 24px}}

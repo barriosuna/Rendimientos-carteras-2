@@ -31,7 +31,9 @@ from google.oauth2.service_account import Credentials
 
 RAIZ = Path(__file__).resolve().parent.parent
 LANDING = RAIZ / "landing"
-SALIDA = RAIZ / "public" / "index.html"
+SALIDA_HTML = RAIZ / "public" / "index.html"
+SALIDA_JSON = RAIZ / "public" / "api" / "estrategias.json"
+SALIDA_SP500 = RAIZ / "public" / "api" / "sp500.json"
 
 VENTANAS = ["En el dia", "En el mes", "Ult. 3 meses", "YTD", "Ult. 12 meses"]
 
@@ -152,6 +154,53 @@ def fecha_larga(d):
     return f"{DIAS[d.weekday()]} {d.day} de {MESES[d.month - 1]} de {d.year}"
 
 
+
+def escribir_sp500():
+    """
+    Serie mensual de retorno total del S&P 500 (SPY, dividendos reinvertidos).
+    La usa la calculadora de DCA. Si falla, no corta el build: la página de
+    estrategias no depende de esto y la de DCA muestra su propio error.
+    """
+    try:
+        import yfinance as yf
+    except ImportError:
+        print("AVISO: yfinance no instalado, no se actualiza sp500.json", file=sys.stderr)
+        return
+
+    try:
+        df = yf.download("SPY", start="1993-02-01", interval="1mo",
+                         auto_adjust=True, progress=False)
+        if df is None or df.empty:
+            raise ValueError("respuesta vacía")
+        cierres = df["Close"].dropna()
+        if hasattr(cierres, "columns"):
+            cierres = cierres.iloc[:, 0]
+
+        serie = [{"f": i.strftime("%Y-%m"), "c": round(float(v), 4)}
+                 for i, v in cierres.items()]
+        if len(serie) < 240:
+            raise ValueError(f"serie demasiado corta: {len(serie)} meses")
+
+        payload = {
+            "generado": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+            "ticker": "SPY",
+            "descripcion": ("Cierres mensuales ajustados por dividendos y splits. "
+                            "El retorno entre dos fechas es el cociente de sus cierres."),
+            "desde": serie[0]["f"],
+            "hasta": serie[-1]["f"],
+            "meses": len(serie),
+            "serie": serie,
+        }
+        SALIDA_SP500.parent.mkdir(parents=True, exist_ok=True)
+        SALIDA_SP500.write_text(json.dumps(payload, separators=(",", ":")),
+                                encoding="utf-8")
+        print(f"   {SALIDA_SP500.relative_to(RAIZ)} "
+              f"({len(serie)} meses, {serie[0]['f']} a {serie[-1]['f']})")
+    except Exception as e:
+        print(f"AVISO: no se pudo actualizar sp500.json ({e}). "
+              "Queda el que ya estaba.", file=sys.stderr)
+
+
 def main():
     meta = json.loads((LANDING / "estrategias.json").read_text(encoding="utf-8"))
     nombres_activos = json.loads((LANDING / "activos.json").read_text(encoding="utf-8"))
@@ -213,11 +262,28 @@ def main():
     if re.search(r"\bs/d\b", re.sub(r"a\.r12m===null\?'s/d'", "", html)):
         print("AVISO: quedó algún 's/d' en la página.", file=sys.stderr)
 
-    SALIDA.parent.mkdir(parents=True, exist_ok=True)
-    SALIDA.write_text(html, encoding="utf-8")
+    SALIDA_HTML.parent.mkdir(parents=True, exist_ok=True)
+    SALIDA_HTML.write_text(html, encoding="utf-8")
 
-    print(f"OK · {len(estrategias)} estrategias · última rueda {ctrl['Ultima rueda']} "
-          f"· {SALIDA.relative_to(RAIZ)} ({len(html):,} bytes)")
+    # Endpoint de solo lectura que consume la landing de Webflow.
+    payload = {
+        "generado": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+        "ultimaRueda": ctrl["Ultima rueda"],
+        "fechaLarga": fecha_larga(fecha),
+        "moneda": ctrl.get("Moneda", "USD"),
+        "estrategias": estrategias,
+    }
+    SALIDA_JSON.parent.mkdir(parents=True, exist_ok=True)
+    SALIDA_JSON.write_text(
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+        encoding="utf-8",
+    )
+
+    print(f"OK · {len(estrategias)} estrategias · última rueda {ctrl['Ultima rueda']}")
+    print(f"   {SALIDA_HTML.relative_to(RAIZ)} ({len(html):,} bytes)")
+    print(f"   {SALIDA_JSON.relative_to(RAIZ)} ({SALIDA_JSON.stat().st_size:,} bytes)")
+
+    escribir_sp500()
 
 
 if __name__ == "__main__":
