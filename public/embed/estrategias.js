@@ -26,16 +26,21 @@
     const VENTANAS = ['En el día','En el mes','Últimos 3 meses','En el año (YTD)','Últimos 12 meses'];
     const VENT_CORTA = ['Día','Mes','3M','Año','12M'];
 
-    const fmt = n => (n>0?'+':'') + n.toFixed(2).replace('.',',') + '%';
-    const cls = n => n>0?'pos':(n<0?'neg':'');
-    const clsT = n => n>0?'v-pos':(n<0?'v-neg':'v-cero');
+    // Un dato vacio en el Sheet llega como null. Sin estas guardas, un solo null
+    // tiraba una excepcion y se caia el bloque entero de fichas.
+    const hay = n => typeof n === 'number' && isFinite(n);
+    const fmt = n => hay(n) ? (n>0?'+':'') + n.toFixed(2).replace('.',',') + '%' : 's/d';
+    const pesoTxt = n => hay(n) ? String(n).replace('.',',') + '%' : '—';
+    const cls = n => !hay(n) ? '' : (n>0?'pos':(n<0?'neg':''));
+    const clsT = n => !hay(n) ? 'sd' : (n>0?'v-pos':(n<0?'v-neg':'v-cero'));
 
     /* ---------- TERMÓMETRO ---------- */
     let ventanaActiva = 4;
 
     function pintarBarras(){
       const cont = R.querySelector('#barras');
-      const orden = [...ESTRATEGIAS].sort((a,b)=>b.ret[ventanaActiva]-a.ret[ventanaActiva]);
+      const orden = ESTRATEGIAS.filter(e=>hay(e.ret[ventanaActiva]))
+        .sort((a,b)=>b.ret[ventanaActiva]-a.ret[ventanaActiva]);
       const vals = orden.map(e=>e.ret[ventanaActiva]);
       const min = Math.min(0,...vals), max = Math.max(0,...vals);
       const span = (max-min) || 1;
@@ -76,7 +81,8 @@
     function pintarTabla(){
       const orden = [...ESTRATEGIAS].sort((a,b)=>{
         if(ordCol===-1) return ordDesc ? b.nombre.localeCompare(a.nombre) : a.nombre.localeCompare(b.nombre);
-        return ordDesc ? b.ret[ordCol]-a.ret[ordCol] : a.ret[ordCol]-b.ret[ordCol];
+        const va = e => hay(e.ret[ordCol]) ? e.ret[ordCol] : (ordDesc ? -Infinity : Infinity);
+        return ordDesc ? va(b)-va(a) : va(a)-va(b);
       });
       R.querySelector('#tablaBody').innerHTML = orden.map(e=>
         `<tr><td class="nom"><a href="#${e.id}">${e.nombre}</a><small>${e.riesgo} · ${e.plazo.toLowerCase()}</small></td>` +
@@ -123,7 +129,7 @@
 
     function grafVentanas(e){
       const W=420,H=214,P={t:18,r:8,b:48,l:8};
-      const vs=e.ret, min=Math.min(0,...vs), max=Math.max(0,...vs), span=(max-min)||1;
+      const vs=e.ret.map(v=>hay(v)?v:0), min=Math.min(0,...vs), max=Math.max(0,...vs), span=(max-min)||1;
       const bw=(W-P.l-P.r)/vs.length, gap=bw*0.32;
       const Y=v=>P.t+(max-v)/span*(H-P.t-P.b);
       const y0=Y(0);
@@ -142,6 +148,7 @@
     }
 
     /* ---------- CARDS ---------- */
+    try {
     R.querySelector('#cards').innerHTML = ESTRATEGIAS.map(e=>{
       const kpis = e.ret.map((v,i)=>
         `<div class="kpi${i===4?' destacado':''}">
@@ -152,8 +159,8 @@
       const filas = e.activos.map(a=>
         `<tr>
           <td class="tk"><b>${a.t}</b>${a.nombre?`<small>${a.nombre}</small>`:''}</td>
-          <td class="num">${a.peso.toString().replace('.',',')}%</td>
-          <td class="num ${a.r12m===null?'sd':clsT(a.r12m)}">${a.r12m===null?'s/d':fmt(a.r12m)}</td>
+          <td class="num ${hay(a.peso)?'':'sd'}">${pesoTxt(a.peso)}</td>
+          <td class="num ${clsT(a.r12m)}">${fmt(a.r12m)}</td>
         </tr>`).join('');
 
       const resto = e.totalActivos>5 ? `Se muestran los 5 activos de mayor peso de un total de ${e.totalActivos}.` : `La cartera tiene ${e.totalActivos} activos: están todos.`;
@@ -204,6 +211,9 @@
         </div>
       </article>`;
     }).join('');
+    } catch (err) {
+      if (window.console) console.error('[lb-estrategias] fichas:', err);
+    }
 
     /* ---------- FILTROS ---------- */
     R.querySelectorAll('#filtros button').forEach(b=>{
