@@ -62,7 +62,9 @@ a{color:var(--violeta)}
 
 /* ---------- SECCIONES ---------- */
 section{padding:64px 0}
-.sec-h{margin:0 0 6px;font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.8px}
+section:first-of-type{padding-top:74px}
+section:first-of-type .sec-h{margin-top:0}
+.sec-h{margin:40px 0 6px;font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.8px}
 .sec-b{margin:0 0 34px;font-size:15.5px;color:var(--gris);max-width:62ch}
 
 /* ---------- TERMÓMETRO ---------- */
@@ -120,7 +122,7 @@ th.ord[aria-sort]{color:var(--acento)}
 .filtros button[aria-pressed="true"]{background:var(--violeta);border-color:var(--violeta);color:#fff}
 
 /* ---------- CARDS ---------- */
-.cards{display:flex;flex-direction:column;gap:26px}
+.cards{display:flex;flex-direction:column;gap:26px;margin-bottom:26px}
 .card{background:#fff;border:1px solid var(--linea);border-radius:22px;overflow:hidden;scroll-margin-top:96px}
 .card[hidden]{display:none}
 .card-h{display:flex;gap:18px;align-items:flex-start;padding:28px 30px 22px;border-bottom:1px solid var(--linea)}
@@ -178,11 +180,13 @@ th.ord[aria-sort]{color:var(--acento)}
 @media (max-width:560px){.prog{padding:16px 20px}}
 
 /* ---------- CIERRE ---------- */
-.cierre{background:var(--violeta);background-image:linear-gradient(135deg,#522398 0%,#8555ff 100%);border-radius:22px;padding:44px 40px;color:#fff}
+.cierre{background:var(--violeta);background-image:linear-gradient(135deg,#522398 0%,#8555ff 100%);border-radius:22px;padding:44px 40px;margin-top:22px;color:#fff}
 .cierre h3{margin:0 0 12px;font-size:26px;font-weight:800;letter-spacing:-.6px}
 .cierre p{margin:0 0 26px;font-size:16px;line-height:1.65;color:#eee6fb;max-width:56ch}
 .btn{display:inline-block;padding:16px 40px;border-radius:10px;background:#fff;color:var(--violeta);font-size:15.5px;font-weight:800;text-decoration:none}
 .btn:hover{background:var(--verde);color:var(--negro)}
+.btn-sec{display:inline-block;padding:16px 30px;margin-left:10px;border-radius:10px;border:1.5px solid rgba(255,255,255,.45);color:#fff;font-size:15px;font-weight:700;text-decoration:none}
+.btn-sec:hover{background:rgba(255,255,255,.14);border-color:#fff}
 
 .metodo{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);padding:28px 30px}
 .metodo h4{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--acento);text-transform:uppercase}
@@ -205,6 +209,7 @@ footer{padding:0 0 60px}
   .nav-logo img{height:22px}
     .hero{padding:52px 0 70px}
   section{padding:46px 0}
+  .sec-h{margin-top:26px}
   .termo{padding:24px 18px}
   .barra{grid-template-columns:1fr 62px;gap:8px;padding:8px}
   .barra-riel{grid-column:1/-1;grid-row:2}
@@ -214,6 +219,7 @@ footer{padding:0 0 60px}
   .kpi:nth-child(5){border-right:0}
   .card-h,.graf,.act,.desc{padding-left:20px;padding-right:20px}
   .cierre{padding:32px 24px}
+  .btn,.btn-sec{display:block;margin:0 0 10px 0;text-align:center;padding:15px 20px}
 }
 </style>
 </head>
@@ -229,6 +235,7 @@ footer{padding:0 0 60px}
     <div class="nav-links">
       <a href="/">Inicio</a>
       <a href="/estrategias-de-inversion" aria-current="page">Estrategias</a>
+      <a href="/dca">Inversión programada</a>
       <a href="/blog">Blog</a>
     </div>
   </div>
@@ -263,7 +270,7 @@ footer{padding:0 0 60px}
       </div>
     </div>
     <div class="barras" id="barras"></div>
-    <p class="termo-pie">Rendimiento total en dólares, punto a punto, con dividendos reinvertidos. Cierre del viernes 21 de agosto de 2026.</p>
+    <p class="termo-pie">Rendimiento total en dólares, punto a punto, con dividendos reinvertidos. Cierre del martes 25 de agosto de 2026.</p>
   </div>
 </section>
 
@@ -304,6 +311,7 @@ footer{padding:0 0 60px}
     <h3>¿Cuál va con vos?</h3>
     <p>La estrategia que más rindió no es necesariamente la que te conviene. Depende de en cuánto tiempo vas a necesitar la plata y de cuánto podés ver caer tu cartera sin vender. Y una vez elegida, no hace falta que estés encima: programás un monto fijo por día, por semana o por mes y listo.</p>
     <a class="btn" href="#">Hablá con tu asesor</a>
+      <a class="btn-sec" href="/dca">Cómo funciona la inversión programada</a>
   </div>
 </section>
 
@@ -332,30 +340,30 @@ const ESTRATEGIAS = [
   "riesgoKey": "moderate",
   "plazo": "Largo plazo",
   "ret": [
-   0.48,
-   2.77,
-   1.74,
-   13.15,
-   20.28
+   0.37,
+   2.81,
+   1.78,
+   13.19,
+   20.31
   ],
   "activos": [
    {
     "t": "VTI",
     "peso": 60.0,
     "nombre": "Acciones EE.UU. (mercado total)",
-    "r12m": 20.26
+    "r12m": 20.14
    },
    {
     "t": "VXUS",
     "peso": 30.0,
     "nombre": "Acciones fuera de EE.UU.",
-    "r12m": 26.46
+    "r12m": 26.67
    },
    {
     "t": "BND",
     "peso": 10.0,
     "nombre": "Bonos EE.UU.",
-    "r12m": 1.82
+    "r12m": 2.24
    }
   ],
   "totalActivos": 3,
@@ -375,42 +383,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Largo plazo",
   "ret": [
-   0.41,
-   4.52,
-   -0.62,
-   27.02,
-   46.62
+   0.97,
+   4.18,
+   -0.91,
+   26.56,
+   46.12
   ],
   "activos": [
    {
     "t": "QQQ",
     "peso": 30.0,
     "nombre": "Nasdaq 100",
-    "r12m": 25.68
+    "r12m": 25.14
    },
    {
     "t": "SMH",
     "peso": 25.0,
     "nombre": "Semiconductores",
-    "r12m": 93.66
+    "r12m": 91.84
    },
    {
     "t": "VUG",
     "peso": 20.0,
     "nombre": "Acciones de crecimiento",
-    "r12m": 14.97
+    "r12m": 14.91
    },
    {
     "t": "IWO",
     "peso": 15.0,
     "nombre": "Small caps de crecimiento",
-    "r12m": 26.51
+    "r12m": 25.68
    },
    {
     "t": "XBI",
     "peso": 10.0,
     "nombre": "Biotecnología",
-    "r12m": 85.3
+    "r12m": 87.82
    }
   ],
   "totalActivos": 5,
@@ -429,36 +437,36 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Mediano plazo",
   "ret": [
-   0.38,
-   3.21,
-   1.81,
-   25.8,
-   35.05
+   0.2,
+   2.63,
+   1.25,
+   25.06,
+   34.23
   ],
   "activos": [
    {
     "t": "VB",
     "peso": 25.0,
     "nombre": "Small caps EE.UU.",
-    "r12m": 22.33
+    "r12m": 21.52
    },
    {
     "t": "MTUM",
     "peso": 25.0,
     "nombre": "Factor momentum",
-    "r12m": 26.1
+    "r12m": 24.95
    },
    {
     "t": "QUAL",
     "peso": 25.0,
     "nombre": "Factor calidad",
-    "r12m": 19.26
+    "r12m": 19.6
    },
    {
     "t": "VLUE",
     "peso": 25.0,
     "nombre": "Factor valor",
-    "r12m": 72.5
+    "r12m": 70.86
    }
   ],
   "totalActivos": 4,
@@ -482,42 +490,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Largo plazo",
   "ret": [
-   -0.18,
-   5.37,
-   -4.58,
-   25.28,
-   38.04
+   1.55,
+   4.71,
+   -5.17,
+   24.43,
+   37.04
   ],
   "activos": [
    {
     "t": "NVDA",
     "peso": 25.0,
     "nombre": "Nvidia",
-    "r12m": 23.44
+    "r12m": 22.73
    },
    {
     "t": "CHAT",
     "peso": 25.0,
     "nombre": "Inteligencia artificial (temático)",
-    "r12m": 68.3
+    "r12m": 66.75
    },
    {
     "t": "SMH",
     "peso": 20.0,
     "nombre": "Semiconductores",
-    "r12m": 93.66
+    "r12m": 91.84
    },
    {
     "t": "IGV",
     "peso": 20.0,
     "nombre": "Software",
-    "r12m": -4.36
+    "r12m": -5.14
    },
    {
     "t": "VST",
     "peso": 10.0,
     "nombre": "Vistra (energía eléctrica)",
-    "r12m": -27.6
+    "r12m": -26.71
    }
   ],
   "totalActivos": 5,
@@ -536,42 +544,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "conservative",
   "plazo": "Mediano plazo",
   "ret": [
-   -0.05,
-   0.22,
-   -0.18,
-   0.66,
-   2.26
+   0.14,
+   0.47,
+   0.07,
+   0.9,
+   2.52
   ],
   "activos": [
    {
     "t": "SGOV",
     "peso": 40.0,
     "nombre": "Letras del Tesoro (0-3 meses)",
-    "r12m": 3.7
+    "r12m": 3.72
    },
    {
     "t": "SHY",
     "peso": 25.0,
     "nombre": "Tesoro EE.UU. 1-3 años",
-    "r12m": 2.44
+    "r12m": 2.51
    },
    {
     "t": "LQD",
     "peso": 20.0,
     "nombre": "Corporativos grado de inversión",
-    "r12m": 0.92
+    "r12m": 1.54
    },
    {
     "t": "IEF",
     "peso": 10.0,
     "nombre": "Tesoro EE.UU. 7-10 años",
-    "r12m": 0.33
+    "r12m": 0.83
    },
    {
     "t": "TLT",
     "peso": 5.0,
     "nombre": "Tesoro EE.UU. +20 años",
-    "r12m": -0.92
+    "r12m": 0.26
    }
   ],
   "totalActivos": 5,
@@ -589,30 +597,30 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Largo plazo",
   "ret": [
-   2.81,
-   2.07,
-   9.1,
-   -7.04,
-   -11.58
+   -0.89,
+   1.1,
+   8.17,
+   -7.71,
+   -12.26
   ],
   "activos": [
    {
     "t": "MOH",
     "peso": 43.49,
     "nombre": "Molina Healthcare",
-    "r12m": 10.76
+    "r12m": 10.34
    },
    {
     "t": "LULU",
     "peso": 32.35,
     "nombre": "Lululemon",
-    "r12m": -40.12
+    "r12m": -41.42
    },
    {
     "t": "SLM",
     "peso": 24.16,
     "nombre": "SLM Corporation",
-    "r12m": -13.59
+    "r12m": -13.89
    }
   ],
   "totalActivos": 3,
@@ -633,42 +641,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Largo plazo",
   "ret": [
-   0.96,
-   1.37,
-   -0.74,
-   16.81,
-   31.89
+   0.75,
+   1.45,
+   -0.67,
+   16.97,
+   32.1
   ],
   "activos": [
    {
     "t": "MCHI",
     "peso": 25.0,
     "nombre": "Acciones de China",
-    "r12m": -7.5
+    "r12m": -8.49
    },
    {
     "t": "INDA",
     "peso": 18.0,
     "nombre": "Acciones de India",
-    "r12m": -4.5
+    "r12m": -3.71
    },
    {
     "t": "EWZ",
     "peso": 15.0,
     "nombre": "Acciones de Brasil",
-    "r12m": 24.18
+    "r12m": 24.59
    },
    {
     "t": "EWT",
     "peso": 12.0,
     "nombre": "Acciones de Taiwán",
-    "r12m": 85.47
+    "r12m": 86.69
    },
    {
     "t": "EWY",
     "peso": 10.0,
     "nombre": "Acciones de Corea del Sur",
-    "r12m": 152.42
+    "r12m": 153.08
    }
   ],
   "totalActivos": 8,
@@ -689,30 +697,30 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Largo plazo",
   "ret": [
-   0.76,
-   2.88,
-   6.0,
-   18.02,
-   23.29
+   -0.23,
+   2.85,
+   5.96,
+   17.97,
+   23.24
   ],
   "activos": [
    {
     "t": "SCHD",
     "peso": 25.0,
     "nombre": "Dividendos de calidad",
-    "r12m": 30.37
+    "r12m": 29.94
    },
    {
     "t": "VIG",
     "peso": 25.0,
     "nombre": "Dividendos crecientes",
-    "r12m": 17.53
+    "r12m": 17.57
    },
    {
     "t": "DGRO",
     "peso": 20.0,
     "nombre": "Crecimiento de dividendos",
-    "r12m": 21.46
+    "r12m": 21.56
    },
    {
     "t": "IDVO",
@@ -724,7 +732,7 @@ const ESTRATEGIAS = [
     "t": "DIVO",
     "peso": 15.0,
     "nombre": "Dividendos + covered calls",
-    "r12m": 18.45
+    "r12m": 18.66
    }
   ],
   "totalActivos": 5,
@@ -744,42 +752,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "conservative",
   "plazo": "Largo plazo",
   "ret": [
-   0.59,
-   4.28,
-   0.87,
-   5.66,
-   14.64
+   -0.05,
+   4.39,
+   0.99,
+   5.77,
+   14.76
   ],
   "activos": [
    {
     "t": "VTI",
     "peso": 25.0,
     "nombre": "Acciones EE.UU. (mercado total)",
-    "r12m": 20.26
+    "r12m": 20.14
    },
    {
     "t": "GLD",
     "peso": 25.0,
     "nombre": "Oro físico",
-    "r12m": 33.1
+    "r12m": 33.31
    },
    {
     "t": "SGOV",
     "peso": 25.0,
     "nombre": "Letras del Tesoro (0-3 meses)",
-    "r12m": 3.7
+    "r12m": 3.72
    },
    {
     "t": "BND",
     "peso": 15.0,
     "nombre": "Bonos EE.UU.",
-    "r12m": 1.82
+    "r12m": 2.24
    },
    {
     "t": "BNDX",
     "peso": 10.0,
     "nombre": "Bonos globales cubiertos",
-    "r12m": 1.05
+    "r12m": 1.33
    }
   ],
   "totalActivos": 5,
@@ -964,7 +972,7 @@ document.getElementById('cards').innerHTML = ESTRATEGIAS.map(e=>{
     <div class="desc">${desc}</div>
     <div class="prog">
       <div class="prog-txt">
-        <p>🔁 En LB podés poner un monto fijo en <b>${e.nombre}</b> y que se invierta solo, sin que tengas que acordarte.</p>
+        <p>🔁 En LB podés poner un monto fijo en <b>${e.nombre}</b> y que se invierta solo, sin que tengas que acordarte. <a href="/dca">Por qué conviene invertir así</a></p>
       </div>
       <div class="frec"><span>Todos los días</span><span>Todas las semanas</span><span>Todos los meses</span></div>
     </div>
