@@ -225,33 +225,49 @@
     });
   }
 
-  function montar(payload) {
+  // El contenido explicativo no depende de datos, asi que se dibuja siempre.
+  // Solo la calculadora y la tabla de escenarios esperan al endpoint.
+  function dibujarEstructura() {
+    R.innerHTML = MARKUP
+      .replace('__MAX_ANIOS__', 30)
+      .replace('__ANIOS__', estado.anios)
+      .replace('__ANIOS_TXT__', estado.anios)
+      .replace(/__DESDE__/g, '…')
+      .replace(/__HASTA__/g, '…');
+    R.querySelector('#dcaMecGraf').innerHTML = grafMecanismo();
+  }
+
+  function conDatos(payload) {
     SERIE = payload.serie;
     var maxAnios = Math.min(30, Math.floor((SERIE.length - 1) / 12));
     if (estado.anios > maxAnios) estado.anios = maxAnios;
 
-    R.innerHTML = MARKUP
-      .replace('__MAX_ANIOS__', maxAnios)
-      .replace('__ANIOS__', estado.anios)
-      .replace('__ANIOS_TXT__', estado.anios)
-      .replace('__DESDE__', SERIE[0].f.replace('-', '/'))
-      .replace('__HASTA__', SERIE[SERIE.length - 1].f.replace('-', '/'));
+    var rango = R.querySelector('#dcaAnios');
+    rango.max = maxAnios;
+    rango.value = estado.anios;
+    R.querySelector('#dcaAniosTxt').textContent = estado.anios;
 
-    R.querySelector('#dcaMecGraf').innerHTML = grafMecanismo();
+    var desde = SERIE[0].f.replace('-', '/');
+    var hasta = SERIE[SERIE.length - 1].f.replace('-', '/');
+    R.querySelectorAll('.periodo').forEach(function (e) {
+      e.textContent = desde + ' y ' + hasta;
+    });
+
     conectar();
     pintarResultado();
     pintarEscenarios();
   }
 
-  function fallar(err) {
+  function sinDatos(err) {
     var c = R.querySelector('#dcaCalc');
     if (c) {
-      c.innerHTML = '<p class="calc-cargando">No pudimos cargar los datos históricos ' +
-        'en este momento. Probá recargar la página.</p>';
-    } else {
-      R.innerHTML = '<p style="padding:32px 24px;font-family:\'Plus Jakarta Sans\',Arial,sans-serif;' +
-        'font-size:14.5px;color:#6b6678;text-align:center">No pudimos cargar esta sección. ' +
-        'Probá recargar la página.</p>';
+      c.innerHTML = '<p class="calc-cargando">La calculadora no está disponible en este ' +
+        'momento. Probá recargar la página en un rato.</p>';
+    }
+    var t = R.querySelector('#dcaEscenarios');
+    if (t) {
+      t.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#9990a8;' +
+        'font-weight:500;padding:26px 16px">Sin datos disponibles por ahora.</td></tr>';
     }
     if (window.console) console.error('[lb-dca]', err);
   }
@@ -259,6 +275,7 @@
   function arrancar() {
     R = document.getElementById('lb-dca');
     if (!R) return;
+    dibujarEstructura();
     R.setAttribute('aria-busy', 'true');
     fetch(ENDPOINT, { cache: 'no-cache' })
       .then(function (r) {
@@ -269,9 +286,9 @@
         if (!d || !Array.isArray(d.serie) || d.serie.length < 24) {
           throw new Error('serie insuficiente');
         }
-        montar(d);
+        conDatos(d);
       })
-      .catch(fallar)
+      .catch(sinDatos)
       .then(function () { R.removeAttribute('aria-busy'); });
   }
 
@@ -316,7 +333,7 @@
 
 '<section class="wrap">',
 '  <h2 class="sec-h">Probá con datos reales</h2>',
-'  <p class="sec-b">Cuánto habrías tenido si hubieras aportado un monto fijo al S&amp;P 500. Corre sobre los precios mensuales reales del índice, con dividendos reinvertidos, entre __DESDE__ y __HASTA__.</p>',
+'  <p class="sec-b">Cuánto habrías tenido si hubieras aportado un monto fijo al S&amp;P 500. Corre sobre los precios mensuales reales del índice, con dividendos reinvertidos, entre <span class=\"periodo\">…</span>.</p>',
 '  <div class="calc" id="dcaCalc">',
 '    <div class="calc-ctrl">',
 '      <div class="campo"><label for="dcaMonto">Monto de cada aporte (USD)</label>',
