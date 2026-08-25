@@ -50,12 +50,16 @@ jobs:
 
       - name: Commit si cambio algo
         run: |
-          if git diff --quiet -- public/index.html; then
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # -A toma tambien los archivos nuevos: `git diff` solo ve los ya trackeados,
+          # asi que un archivo recien creado pasaba de largo sin avisar.
+          git add -A public
+          if git diff --cached --quiet; then
             echo "Sin cambios en la landing, no se commitea."
             exit 0
           fi
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/index.html
+          echo "Cambios a publicar:"
+          git diff --cached --name-only
           git commit -m "landing: rendimientos al $(date -u +%d/%m/%Y) [skip ci]"
           git push
