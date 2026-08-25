@@ -19,6 +19,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 PLANTILLA = RAIZ / "landing" / "template.html"
 DEST = RAIZ / "public" / "embed"
+SALIDA_DCA = RAIZ / "public" / "dca.html"
 
 CONTENEDOR = "#lb-estrategias"
 
@@ -159,11 +160,79 @@ def construir_js(js, markup):
             .replace("__CUERPO__", cuerpo))
 
 
+
+# ── página de DCA ────────────────────────────────────────────────────────────
+# Reusa la navbar y el hero de template.html para que las dos páginas queden
+# siempre iguales. El contenido lo pone embed/dca.js.
+
+SHELL_DCA = """<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inversión programada · LB Finanzas</title>
+<meta name="description" content="Qué es el Dollar Cost Average, por qué funciona y una calculadora con los datos históricos reales del S&amp;P 500.">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon-64.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#522398">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/embed/dca.css">
+<style>
+__SHELL__
+body{margin:0;background:var(--fondo);color:var(--negro);font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+a{color:var(--violeta)}
+</style>
+</head>
+<body>
+
+__NAV__
+
+<header class="hero">
+  <div class="hero-in">
+    <p class="eyebrow">CÓMO INVERTIR</p>
+    <h1>Inversión programada</h1>
+    <p>Poner siempre el mismo monto, siempre en la misma fecha, sin mirar el precio. Es la forma más simple de invertir sin tener que adivinar el momento — y acá podés ver cuánto habría dado con los datos reales del mercado.</p>
+  </div>
+</header>
+
+<main>
+  <div id="lb-dca"></div>
+</main>
+
+<script src="/embed/dca.js" data-endpoint="/api/sp500.json" defer></script>
+</body>
+</html>
+"""
+
+
+def construir_dca(plantilla, css):
+    """Arma public/dca.html con la navbar y el hero de la plantilla."""
+    nav = re.search(r'(<nav class="nav">.*?</nav>)', plantilla, re.S).group(1)
+    nav = nav.replace(' aria-current="page"', '')
+    nav = nav.replace('<a href="/dca">', '<a href="/dca" aria-current="page">')
+
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    partes = []
+    for sel, cuerpo in bloques(css):
+        if sel == ":root" or sel.startswith(PREFIJOS_FUERA) or sel in {"*", ":focus-visible"}:
+            partes.append(f"{sel}{{{cuerpo.strip()}}}")
+        elif sel.startswith("@media"):
+            dentro = [f"{s}{{{c.strip()}}}" for s, c in bloques(cuerpo)
+                      if s.startswith(PREFIJOS_FUERA) or ".wrap" in s or ".nav" in s]
+            if dentro:
+                partes.append(sel + "{" + "".join(dentro) + "}")
+    return SHELL_DCA.replace("__SHELL__", "\n".join(partes)).replace("__NAV__", nav)
+
+
 def main():
-    h = PLANTILLA.read_text(encoding="utf-8")
-    css = re.search(r"<style>(.*?)</style>", h, re.S).group(1)
-    js = re.search(r"<script>(.*?)</script>", h, re.S).group(1)
-    markup = re.search(r"<main>(.*?)</main>", h, re.S).group(1).strip()
+    h_plantilla = PLANTILLA.read_text(encoding="utf-8")
+    css = re.search(r"<style>(.*?)</style>", h_plantilla, re.S).group(1)
+    js = re.search(r"<script>(.*?)</script>", h_plantilla, re.S).group(1)
+    markup = re.search(r"<main>(.*?)</main>", h_plantilla, re.S).group(1).strip()
 
     # La fecha del pie la escribe el JS con lo que venga del endpoint.
     markup = markup.replace('<p class="termo-pie">', '<p class="termo-pie" id="termoPie">')
@@ -177,8 +246,9 @@ def main():
     (DEST / "estrategias.css").write_text(construir_css(css), encoding="utf-8")
     (DEST / "estrategias.js").write_text(construir_js(js, markup), encoding="utf-8")
 
-    for f in ("estrategias.css", "estrategias.js"):
-        p = DEST / f
+    SALIDA_DCA.write_text(construir_dca(h_plantilla, css), encoding="utf-8")
+
+    for p in (DEST / "estrategias.css", DEST / "estrategias.js", SALIDA_DCA):
         print(f"OK · {p.relative_to(RAIZ)} ({p.stat().st_size:,} bytes)")
 
 

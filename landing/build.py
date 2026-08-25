@@ -23,7 +23,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import gspread
@@ -182,7 +182,7 @@ def escribir_sp500():
             raise ValueError(f"serie demasiado corta: {len(serie)} meses")
 
         payload = {
-            "generado": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+            "generado": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "ticker": "SPY",
             "descripcion": ("Cierres mensuales ajustados por dividendos y splits. "
                             "El retorno entre dos fechas es el cociente de sus cierres."),
@@ -267,7 +267,7 @@ def main():
 
     # Endpoint de solo lectura que consume la landing de Webflow.
     payload = {
-        "generado": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+        "generado": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "ultimaRueda": ctrl["Ultima rueda"],
         "fechaLarga": fecha_larga(fecha),
         "moneda": ctrl.get("Moneda", "USD"),

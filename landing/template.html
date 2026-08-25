@@ -62,6 +62,7 @@ a{color:var(--violeta)}
 
 /* ---------- SECCIONES ---------- */
 section{padding:64px 0}
+section:first-of-type{padding-top:74px}
 section:first-of-type .sec-h{margin-top:0}
 .sec-h{margin:40px 0 6px;font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.8px}
 .sec-b{margin:0 0 34px;font-size:15.5px;color:var(--gris);max-width:62ch}
@@ -184,6 +185,8 @@ th.ord[aria-sort]{color:var(--acento)}
 .cierre p{margin:0 0 26px;font-size:16px;line-height:1.65;color:#eee6fb;max-width:56ch}
 .btn{display:inline-block;padding:16px 40px;border-radius:10px;background:#fff;color:var(--violeta);font-size:15.5px;font-weight:800;text-decoration:none}
 .btn:hover{background:var(--verde);color:var(--negro)}
+.btn-sec{display:inline-block;padding:16px 30px;margin-left:10px;border-radius:10px;border:1.5px solid rgba(255,255,255,.45);color:#fff;font-size:15px;font-weight:700;text-decoration:none}
+.btn-sec:hover{background:rgba(255,255,255,.14);border-color:#fff}
 
 .metodo{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);padding:28px 30px}
 .metodo h4{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--acento);text-transform:uppercase}
@@ -216,6 +219,7 @@ footer{padding:0 0 60px}
   .kpi:nth-child(5){border-right:0}
   .card-h,.graf,.act,.desc{padding-left:20px;padding-right:20px}
   .cierre{padding:32px 24px}
+  .btn,.btn-sec{display:block;margin:0 0 10px 0;text-align:center;padding:15px 20px}
 }
 </style>
 </head>
@@ -231,6 +235,7 @@ footer{padding:0 0 60px}
     <div class="nav-links">
       <a href="/">Inicio</a>
       <a href="/estrategias-de-inversion" aria-current="page">Estrategias</a>
+      <a href="/dca">Inversión programada</a>
       <a href="/blog">Blog</a>
     </div>
   </div>
@@ -306,6 +311,7 @@ footer{padding:0 0 60px}
     <h3>¿Cuál va con vos?</h3>
     <p>La estrategia que más rindió no es necesariamente la que te conviene. Depende de en cuánto tiempo vas a necesitar la plata y de cuánto podés ver caer tu cartera sin vender. Y una vez elegida, no hace falta que estés encima: programás un monto fijo por día, por semana o por mes y listo.</p>
     <a class="btn" href="#">Hablá con tu asesor</a>
+      <a class="btn-sec" href="/dca">Cómo funciona la inversión programada</a>
   </div>
 </section>
 
@@ -498,7 +504,7 @@ document.getElementById('cards').innerHTML = ESTRATEGIAS.map(e=>{
     <div class="desc">${desc}</div>
     <div class="prog">
       <div class="prog-txt">
-        <p>🔁 En LB podés poner un monto fijo en <b>${e.nombre}</b> y que se invierta solo, sin que tengas que acordarte.</p>
+        <p>🔁 En LB podés poner un monto fijo en <b>${e.nombre}</b> y que se invierta solo, sin que tengas que acordarte. <a href="/dca">Por qué conviene invertir así</a></p>
       </div>
       <div class="frec"><span>Todos los días</span><span>Todas las semanas</span><span>Todos los meses</span></div>
     </div>

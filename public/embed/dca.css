@@ -16,6 +16,7 @@
 
 #lb-dca .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
 #lb-dca section{padding:56px 0}
+#lb-dca > section:first-child{padding-top:74px}
 #lb-dca .sec-h{margin:40px 0 6px;font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.8px}
 #lb-dca section:first-of-type .sec-h{margin-top:0}
 #lb-dca .sec-b{margin:0 0 34px;font-size:15.5px;color:var(--gris);max-width:64ch}
@@ -138,6 +139,7 @@
 @media (max-width:560px){
   #lb-dca .wrap{padding:0 18px}
   #lb-dca section{padding:44px 0}
+  #lb-dca > section:first-child{padding-top:52px}
   #lb-dca .sec-h{margin-top:26px}
   #lb-dca .kpis{grid-template-columns:1fr}
   #lb-dca .kpi{border-right:0;border-bottom:1px solid var(--linea)}
