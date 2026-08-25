@@ -1,53 +1,12 @@
 /*! LB Finanzas — widget Estrategias de inversión. GENERADO: no editar. */
-/*! Blindaje contra el CSS del sitio anfitrion (Webflow).
-    El widget se comporta como una isla: reset universal escopado, y despues
-    sus propias reglas — mas especificas — vuelven a pintar lo que corresponde. */
-#lb-estrategias,#lb-estrategias *,#lb-estrategias *::before,#lb-estrategias *::after{
-  box-sizing:border-box;
-  margin:0;padding:0;border:0;
-  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  font-size:inherit;font-weight:inherit;font-style:normal;line-height:inherit;
-  color:inherit;letter-spacing:normal;text-transform:none;text-decoration:none;
-  text-shadow:none;box-shadow:none;background:transparent;float:none;
-  list-style:none;vertical-align:baseline;
-}
-#lb-estrategias{
-  display:block;background:#f7f7f7;color:#2c2b2e;
-  font-size:16px;font-weight:400;line-height:1.6;text-align:left;
-  -webkit-font-smoothing:antialiased;
-  padding-bottom:64px;             /* aire antes del footer del sitio */
-}
+#lb-estrategias,#lb-estrategias *,#lb-estrategias *::before,#lb-estrategias *::after{box-sizing:border-box;margin:0;padding:0;border:0;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:inherit;font-weight:inherit;font-style:normal;line-height:inherit;color:inherit;letter-spacing:normal;text-transform:none;text-decoration:none;text-shadow:none;box-shadow:none;background:transparent;float:none;list-style:none;vertical-align:baseline}
+#lb-estrategias{display:block;background:#f7f7f7;color:#2c2b2e;font-size:16px;font-weight:400;line-height:1.6;text-align:left;-webkit-font-smoothing:antialiased;padding-bottom:64px}
 #lb-estrategias b,#lb-estrategias strong{font-weight:700}
 #lb-estrategias em,#lb-estrategias i{font-style:italic}
 #lb-estrategias img,#lb-estrategias svg{max-width:100%;display:block}
 #lb-estrategias table{border-collapse:collapse;border-spacing:0}
 #lb-estrategias button{cursor:pointer;background:none}
 #lb-estrategias input,#lb-estrategias select,#lb-estrategias button{font-family:inherit}
-
-#lb-estrategias,#lb-estrategias *,#lb-estrategias *::before,#lb-estrategias *::after{
-  box-sizing:border-box;
-  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
-}
-#lb-estrategias{
-  background:#f7f7f7;color:#2c2b2e;font-size:16px;line-height:1.6;
-  letter-spacing:normal;text-transform:none;text-align:left;
-  padding-bottom:64px;             /* aire antes del footer del sitio */
-}
-#lb-estrategias h1,#lb-estrategias h2,#lb-estrategias h3,#lb-estrategias h4,#lb-estrategias h5,#lb-estrategias h6,
-#lb-estrategias p,#lb-estrategias ul,#lb-estrategias ol,#lb-estrategias li,#lb-estrategias table,#lb-estrategias figure,#lb-estrategias blockquote{
-  margin:0;padding:0;font-size:inherit;line-height:inherit;color:inherit;
-  letter-spacing:normal;text-transform:none;
-}
-#lb-estrategias b,#lb-estrategias strong{font-weight:700}
-#lb-estrategias em,#lb-estrategias i{font-style:italic}
-#lb-estrategias a{text-decoration:none}
-#lb-estrategias img,#lb-estrategias svg{max-width:100%}
-#lb-estrategias button,#lb-estrategias input,#lb-estrategias select{font-family:inherit;font-size:inherit;letter-spacing:normal;text-transform:none}
-#lb-estrategias table{border-collapse:collapse}
-
-#lb-estrategias{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:16px;line-height:1.6;color:#2c2b2e;-webkit-font-smoothing:antialiased}
-#lb-estrategias *{box-sizing:border-box}
 #lb-estrategias a{color:var(--violeta)}
 #lb-estrategias :focus-visible{outline:3px solid var(--acento);outline-offset:3px;border-radius:6px}
 @media (prefers-reduced-motion:reduce){#lb-estrategias *{animation:none!important;transition:none!important}}
@@ -152,12 +111,10 @@
 #lb-estrategias .cierre p{margin:0 0 26px;font-size:16px;line-height:1.65;color:#eee6fb;max-width:56ch}
 #lb-estrategias .btn{display:inline-block;padding:16px 40px;border-radius:10px;background:#fff;color:var(--violeta);font-size:15.5px;font-weight:800;text-decoration:none}
 #lb-estrategias .btn:hover{background:var(--verde);color:var(--negro)}
-#lb-estrategias .btn-sec{display:inline-block;padding:16px 30px;margin-left:10px;border-radius:10px;border:1.5px solid rgba(255,255,255,.45);color:#fff;font-size:15px;font-weight:700;text-decoration:none}
-#lb-estrategias .btn-sec:hover{background:rgba(255,255,255,.14);border-color:#fff}
 #lb-estrategias .metodo{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);padding:28px 30px}
 #lb-estrategias .metodo h4{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--acento);text-transform:uppercase}
 #lb-estrategias .metodo p{margin:0 0 11px;font-size:13.5px;line-height:1.65;color:var(--gris)}
 #lb-estrategias .metodo p:last-child{margin-bottom:0}
 #lb-estrategias footer{padding:0 0 60px}
 @media (max-width:860px){#lb-estrategias .card-b{grid-template-columns:1fr}#lb-estrategias .graf{border-right:0;border-bottom:1px solid var(--linea)}#lb-estrategias .kpis{grid-template-columns:repeat(3,1fr)}#lb-estrategias .kpi{border-bottom:1px solid var(--linea)}#lb-estrategias .kpi:nth-child(3){border-right:0}#lb-estrategias .barra{grid-template-columns:120px 1fr 66px;gap:10px}}
-@media (max-width:560px){#lb-estrategias section{padding:46px 0}#lb-estrategias .sec-h{margin-top:26px}#lb-estrategias .termo{padding:24px 18px}#lb-estrategias .barra{grid-template-columns:1fr 62px;gap:8px;padding:8px}#lb-estrategias .barra-riel{grid-column:1/-1;grid-row:2}#lb-estrategias .barra-n{white-space:normal}#lb-estrategias .kpis{grid-template-columns:repeat(2,1fr)}#lb-estrategias .kpi:nth-child(3){border-right:1px solid var(--linea)}#lb-estrategias .kpi:nth-child(5){border-right:0}#lb-estrategias .card-h,#lb-estrategias .graf,#lb-estrategias .act,#lb-estrategias .desc{padding-left:20px;padding-right:20px}#lb-estrategias .cierre{padding:32px 24px}#lb-estrategias .btn,#lb-estrategias .btn-sec{display:block;margin:0 0 10px 0;text-align:center;padding:15px 20px}}
+@media (max-width:560px){#lb-estrategias section{padding:46px 0}#lb-estrategias .sec-h{margin-top:26px}#lb-estrategias .termo{padding:24px 18px}#lb-estrategias .barra{grid-template-columns:1fr 62px;gap:8px;padding:8px}#lb-estrategias .barra-riel{grid-column:1/-1;grid-row:2}#lb-estrategias .barra-n{white-space:normal}#lb-estrategias .kpis{grid-template-columns:repeat(2,1fr)}#lb-estrategias .kpi:nth-child(3){border-right:1px solid var(--linea)}#lb-estrategias .kpi:nth-child(5){border-right:0}#lb-estrategias .card-h,#lb-estrategias .graf,#lb-estrategias .act,#lb-estrategias .desc{padding-left:20px;padding-right:20px}#lb-estrategias .cierre{padding:32px 24px}}

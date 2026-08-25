@@ -73,11 +73,27 @@ def construir_css(css):
         elif not descartar(sel):
             out.append(f"{escopar(sel)}{{{cuerpo.replace(chr(10), '').strip()}}}")
 
+    # Blindaje: el widget vive dentro de una pagina de Webflow, que trae sus
+    # propios estilos sobre body, h2, p, td y demas. Reset universal escopado
+    # primero; las reglas propias, mas especificas, repintan despues.
     base = (
-        f"{CONTENEDOR}{{font-family:'Plus Jakarta Sans',-apple-system,"
-        'BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:16px;'
-        "line-height:1.6;color:#2c2b2e;-webkit-font-smoothing:antialiased}\n"
-        f"{CONTENEDOR} *{{box-sizing:border-box}}\n"
+        f"{CONTENEDOR},{CONTENEDOR} *,{CONTENEDOR} *::before,{CONTENEDOR} *::after{{"
+        "box-sizing:border-box;margin:0;padding:0;border:0;"
+        "font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"
+        '"Segoe UI",Arial,sans-serif;'
+        "font-size:inherit;font-weight:inherit;font-style:normal;line-height:inherit;"
+        "color:inherit;letter-spacing:normal;text-transform:none;text-decoration:none;"
+        "text-shadow:none;box-shadow:none;background:transparent;float:none;"
+        "list-style:none;vertical-align:baseline}\n"
+        f"{CONTENEDOR}{{display:block;background:#f7f7f7;color:#2c2b2e;font-size:16px;"
+        "font-weight:400;line-height:1.6;text-align:left;"
+        "-webkit-font-smoothing:antialiased;padding-bottom:64px}\n"
+        f"{CONTENEDOR} b,{CONTENEDOR} strong{{font-weight:700}}\n"
+        f"{CONTENEDOR} em,{CONTENEDOR} i{{font-style:italic}}\n"
+        f"{CONTENEDOR} img,{CONTENEDOR} svg{{max-width:100%;display:block}}\n"
+        f"{CONTENEDOR} table{{border-collapse:collapse;border-spacing:0}}\n"
+        f"{CONTENEDOR} button{{cursor:pointer;background:none}}\n"
+        f"{CONTENEDOR} input,{CONTENEDOR} select,{CONTENEDOR} button{{font-family:inherit}}\n"
         f"{CONTENEDOR} a{{color:var(--violeta)}}\n"
         f"{CONTENEDOR} :focus-visible{{outline:3px solid var(--acento);"
         "outline-offset:3px;border-radius:6px}\n"
