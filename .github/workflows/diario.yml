@@ -31,3 +31,31 @@ jobs:
           name: grafico-carteras
           path: carteras.png
           if-no-files-found: warn
+
+
+# 1. Al nivel del job, junto a `runs-on`:
+permissions:
+  contents: write
+
+# 2. Al final de la lista de `steps` del job:
+steps:
+  - name: Dependencias de la landing
+    run: pip install -r landing/requirements.txt
+
+  - name: Generar la landing
+    env:
+      SHEET_ID: ${{ secrets.SHEET_ID }}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+    run: python landing/build.py
+
+  - name: Commit si cambió algo
+    run: |
+      if git diff --quiet -- public/index.html; then
+        echo "Sin cambios en la landing, no se commitea."
+        exit 0
+      fi
+      git config user.name  "github-actions[bot]"
+      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      git add public/index.html
+      git commit -m "landing: rendimientos al $(date -u +%d/%m/%Y) [skip ci]"
+      git push
