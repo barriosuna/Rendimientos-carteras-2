@@ -9,14 +9,16 @@ Cruza dos fuentes:
 Corre como paso final del workflow "Rendimientos carteras", después de que el
 Sheet ya fue actualizado.
 
-Variables de entorno:
-  SHEET_ID                     ID del Sheet de rendimientos
-  GOOGLE_SERVICE_ACCOUNT_JSON  credenciales del service account (el JSON completo)
+Variables de entorno (reusa los secrets que ya tiene el workflow):
+  SHEET_URL o SHEET_ID   URL completa del Sheet, o solo su ID
+  GCP_SA_KEY o GOOGLE_SERVICE_ACCOUNT_JSON
+                         credenciales del service account, como JSON o en base64
 
 Salida: public/index.html
 Códigos de salida: 0 ok · 1 error de datos (no publica nada)
 """
 
+import base64
 import json
 import os
 import re
@@ -43,18 +45,39 @@ def morir(msg):
     sys.exit(1)
 
 
-def abrir_sheet():
-    crudo = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
-    sheet_id = os.environ.get("SHEET_ID")
+def id_del_sheet():
+    """Acepta la URL completa del Sheet o solo el ID."""
+    valor = os.environ.get("SHEET_URL") or os.environ.get("SHEET_ID")
+    if not valor:
+        morir("falta SHEET_URL (o SHEET_ID)")
+    valor = valor.strip()
+    m = re.search(r"/spreadsheets/d/([a-zA-Z0-9_-]+)", valor)
+    return m.group(1) if m else valor
+
+
+def credenciales():
+    """Acepta el JSON del service account tal cual o codificado en base64."""
+    crudo = (os.environ.get("GCP_SA_KEY")
+             or os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"))
     if not crudo:
-        morir("falta GOOGLE_SERVICE_ACCOUNT_JSON")
-    if not sheet_id:
-        morir("falta SHEET_ID")
-    creds = Credentials.from_service_account_info(
-        json.loads(crudo),
-        scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"],
+        morir("falta GCP_SA_KEY (o GOOGLE_SERVICE_ACCOUNT_JSON)")
+    crudo = crudo.strip()
+    if not crudo.startswith("{"):
+        try:
+            crudo = base64.b64decode(crudo).decode("utf-8")
+        except Exception:
+            morir("GCP_SA_KEY no es JSON ni base64 válido")
+    try:
+        info = json.loads(crudo)
+    except json.JSONDecodeError as e:
+        morir(f"GCP_SA_KEY no es un JSON válido: {e}")
+    return Credentials.from_service_account_info(
+        info, scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
     )
-    return gspread.authorize(creds).open_by_key(sheet_id)
+
+
+def abrir_sheet():
+    return gspread.authorize(credenciales()).open_by_key(id_del_sheet())
 
 
 def num(v):
