@@ -1,4 +1,51 @@
 /*! LB Finanzas — widget "Dollar Cost Average" */
+/*! Blindaje contra el CSS del sitio anfitrion (Webflow).
+    El widget se comporta como una isla: reset universal escopado, y despues
+    sus propias reglas — mas especificas — vuelven a pintar lo que corresponde. */
+#lb-dca,#lb-dca *,#lb-dca *::before,#lb-dca *::after{
+  box-sizing:border-box;
+  margin:0;padding:0;border:0;
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:inherit;font-weight:inherit;font-style:normal;line-height:inherit;
+  color:inherit;letter-spacing:normal;text-transform:none;text-decoration:none;
+  text-shadow:none;box-shadow:none;background:transparent;float:none;
+  list-style:none;vertical-align:baseline;
+}
+#lb-dca{
+  display:block;background:#f7f7f7;color:#2c2b2e;
+  font-size:16px;font-weight:400;line-height:1.6;text-align:left;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:64px;             /* aire antes del footer del sitio */
+}
+#lb-dca b,#lb-dca strong{font-weight:700}
+#lb-dca em,#lb-dca i{font-style:italic}
+#lb-dca img,#lb-dca svg{max-width:100%;display:block}
+#lb-dca table{border-collapse:collapse;border-spacing:0}
+#lb-dca button{cursor:pointer;background:none}
+#lb-dca input,#lb-dca select,#lb-dca button{font-family:inherit}
+
+#lb-dca,#lb-dca *,#lb-dca *::before,#lb-dca *::after{
+  box-sizing:border-box;
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+#lb-dca{
+  background:#f7f7f7;color:#2c2b2e;font-size:16px;line-height:1.6;
+  letter-spacing:normal;text-transform:none;text-align:left;
+  padding-bottom:64px;             /* aire antes del footer del sitio */
+}
+#lb-dca h1,#lb-dca h2,#lb-dca h3,#lb-dca h4,#lb-dca h5,#lb-dca h6,
+#lb-dca p,#lb-dca ul,#lb-dca ol,#lb-dca li,#lb-dca table,#lb-dca figure,#lb-dca blockquote{
+  margin:0;padding:0;font-size:inherit;line-height:inherit;color:inherit;
+  letter-spacing:normal;text-transform:none;
+}
+#lb-dca b,#lb-dca strong{font-weight:700}
+#lb-dca em,#lb-dca i{font-style:italic}
+#lb-dca a{text-decoration:none}
+#lb-dca img,#lb-dca svg{max-width:100%}
+#lb-dca button,#lb-dca input,#lb-dca select{font-family:inherit;font-size:inherit;letter-spacing:normal;text-transform:none}
+#lb-dca table{border-collapse:collapse}
+
 
 #lb-dca{
   --violeta:#522398; --violeta-medio:#5632b2; --acento:#8555ff;

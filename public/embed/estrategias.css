@@ -1,4 +1,51 @@
 /*! LB Finanzas — widget Estrategias de inversión. GENERADO: no editar. */
+/*! Blindaje contra el CSS del sitio anfitrion (Webflow).
+    El widget se comporta como una isla: reset universal escopado, y despues
+    sus propias reglas — mas especificas — vuelven a pintar lo que corresponde. */
+#lb-estrategias,#lb-estrategias *,#lb-estrategias *::before,#lb-estrategias *::after{
+  box-sizing:border-box;
+  margin:0;padding:0;border:0;
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:inherit;font-weight:inherit;font-style:normal;line-height:inherit;
+  color:inherit;letter-spacing:normal;text-transform:none;text-decoration:none;
+  text-shadow:none;box-shadow:none;background:transparent;float:none;
+  list-style:none;vertical-align:baseline;
+}
+#lb-estrategias{
+  display:block;background:#f7f7f7;color:#2c2b2e;
+  font-size:16px;font-weight:400;line-height:1.6;text-align:left;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:64px;             /* aire antes del footer del sitio */
+}
+#lb-estrategias b,#lb-estrategias strong{font-weight:700}
+#lb-estrategias em,#lb-estrategias i{font-style:italic}
+#lb-estrategias img,#lb-estrategias svg{max-width:100%;display:block}
+#lb-estrategias table{border-collapse:collapse;border-spacing:0}
+#lb-estrategias button{cursor:pointer;background:none}
+#lb-estrategias input,#lb-estrategias select,#lb-estrategias button{font-family:inherit}
+
+#lb-estrategias,#lb-estrategias *,#lb-estrategias *::before,#lb-estrategias *::after{
+  box-sizing:border-box;
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+#lb-estrategias{
+  background:#f7f7f7;color:#2c2b2e;font-size:16px;line-height:1.6;
+  letter-spacing:normal;text-transform:none;text-align:left;
+  padding-bottom:64px;             /* aire antes del footer del sitio */
+}
+#lb-estrategias h1,#lb-estrategias h2,#lb-estrategias h3,#lb-estrategias h4,#lb-estrategias h5,#lb-estrategias h6,
+#lb-estrategias p,#lb-estrategias ul,#lb-estrategias ol,#lb-estrategias li,#lb-estrategias table,#lb-estrategias figure,#lb-estrategias blockquote{
+  margin:0;padding:0;font-size:inherit;line-height:inherit;color:inherit;
+  letter-spacing:normal;text-transform:none;
+}
+#lb-estrategias b,#lb-estrategias strong{font-weight:700}
+#lb-estrategias em,#lb-estrategias i{font-style:italic}
+#lb-estrategias a{text-decoration:none}
+#lb-estrategias img,#lb-estrategias svg{max-width:100%}
+#lb-estrategias button,#lb-estrategias input,#lb-estrategias select{font-family:inherit;font-size:inherit;letter-spacing:normal;text-transform:none}
+#lb-estrategias table{border-collapse:collapse}
+
 #lb-estrategias{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:16px;line-height:1.6;color:#2c2b2e;-webkit-font-smoothing:antialiased}
 #lb-estrategias *{box-sizing:border-box}
 #lb-estrategias a{color:var(--violeta)}
