@@ -19,7 +19,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 PLANTILLA = RAIZ / "landing" / "template.html"
 DEST = RAIZ / "public" / "embed"
-SALIDA_DCA = RAIZ / "public" / "dca.html"
+SALIDA_DCA = RAIZ / "public" / "inversion-programada-dca.html"
 
 CONTENEDOR = "#lb-estrategias"
 
@@ -213,7 +213,8 @@ def construir_dca(plantilla, css):
     """Arma public/dca.html con la navbar y el hero de la plantilla."""
     nav = re.search(r'(<nav class="nav">.*?</nav>)', plantilla, re.S).group(1)
     nav = nav.replace(' aria-current="page"', '')
-    nav = nav.replace('<a href="/dca">', '<a href="/dca" aria-current="page">')
+    nav = nav.replace('<a href="/inversion-programada-dca">',
+                      '<a href="/inversion-programada-dca" aria-current="page">')
 
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
     partes = []
