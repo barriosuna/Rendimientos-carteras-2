@@ -50,7 +50,7 @@
         const v = e.ret[ventanaActiva];
         const x = (v-min)/span*100;
         const left = Math.min(cero,x), w = Math.max(Math.abs(x-cero),0.6);
-        const color = v>=0 ? 'var(--verde)' : '#ff8fa8';
+        const color = v>=0 ? '#73ffa1' : '#ff8fa8';
         return `<a class="barra" href="#${e.id}">
           <span class="barra-n">${e.nombre}</span>
           <span class="barra-riel">

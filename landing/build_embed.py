@@ -74,21 +74,18 @@ def escudo_de_clases(reglas, contenedor):
     if not clases:
         return ""
     sel = ",".join(f"{contenedor} .{c}" for c in clases)
-    # !important porque el anfitrion puede usarlo. Las reglas propias tambien lo
-    # llevan (ver marcar_importante) y, con igual peso, gana la posterior: la nuestra.
+    # Solo las tres propiedades que realmente ocultan un elemento. Neutralizar
+    # tambien width/height/position rompia las barras del termometro, que fijan
+    # su ancho con estilo inline: un !important del CSS le gana al inline.
     return (sel + "{display:revert!important;visibility:visible!important;"
-            "opacity:1!important;position:static!important;float:none!important;"
-            "clear:none!important;width:auto!important;height:auto!important;"
-            "max-height:none!important;min-height:0!important;transform:none!important;"
-            "clip-path:none!important;overflow:visible!important}\n")
+            "opacity:1!important}\n")
 
 
 def marcar_importante(regla):
     """Refuerza las propiedades que el escudo neutraliza, para que la regla propia
     vuelva a imponerse sobre el escudo y sobre cualquier !important del anfitrion."""
     return re.sub(
-        r"\b(display|visibility|opacity|position|float|width|height|max-height|"
-        r"min-height|transform|overflow)\s*:\s*([^;}!]+)(?=[;}])",
+        r"\b(display|visibility|opacity)\s*:\s*([^;}!]+)(?=[;}])",
         lambda m: f"{m.group(1)}:{m.group(2).strip()}!important",
         regla,
     )
