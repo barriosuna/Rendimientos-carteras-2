@@ -267,7 +267,7 @@ footer{padding:0 0 60px}
       </div>
     </div>
     <div class="barras" id="barras"></div>
-    <p class="termo-pie">Rendimiento total en dólares, punto a punto, con dividendos reinvertidos. Cierre del viernes 2 de octubre de 2026.</p>
+    <p class="termo-pie">Rendimiento total en dólares, punto a punto, con dividendos reinvertidos. Cierre del lunes 5 de octubre de 2026.</p>
   </div>
 </section>
 
@@ -336,30 +336,30 @@ const ESTRATEGIAS = [
   "riesgoKey": "moderate",
   "plazo": "Largo plazo",
   "ret": [
-   0.7,
-   0.7,
-   1.82,
-   12.1,
-   13.29
+   0.55,
+   1.33,
+   2.46,
+   12.81,
+   14.02
   ],
   "activos": [
    {
     "t": "VTI",
     "peso": 60.0,
     "nombre": "Acciones EE.UU. (mercado total)",
-    "r12m": 13.99
+    "r12m": 14.77
    },
    {
     "t": "VXUS",
     "peso": 30.0,
     "nombre": "Acciones fuera de EE.UU.",
-    "r12m": 17.12
+    "r12m": 18.01
    },
    {
     "t": "BND",
     "peso": 10.0,
     "nombre": "Bonos EE.UU.",
-    "r12m": -2.39
+    "r12m": -2.47
    }
   ],
   "totalActivos": 3,
@@ -379,42 +379,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Largo plazo",
   "ret": [
-   1.17,
-   1.49,
-   8.44,
-   32.49,
-   31.72
+   0.83,
+   2.32,
+   9.32,
+   33.54,
+   32.76
   ],
   "activos": [
    {
     "t": "QQQ",
     "peso": 30.0,
     "nombre": "Nasdaq 100",
-    "r12m": 19.68
+    "r12m": 20.77
    },
    {
     "t": "SMH",
     "peso": 25.0,
     "nombre": "Semiconductores",
-    "r12m": 74.3
+    "r12m": 75.16
    },
    {
     "t": "VUG",
     "peso": 20.0,
     "nombre": "Acciones de crecimiento",
-    "r12m": 10.13
+    "r12m": 11.2
    },
    {
     "t": "IWO",
     "peso": 15.0,
     "nombre": "Small caps de crecimiento",
-    "r12m": 9.87
+    "r12m": 10.54
    },
    {
     "t": "XBI",
     "peso": 10.0,
     "nombre": "Biotecnología",
-    "r12m": 37.33
+    "r12m": 39.17
    }
   ],
   "totalActivos": 5,
@@ -433,36 +433,36 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Mediano plazo",
   "ret": [
-   0.5,
-   1.4,
-   3.54,
-   26.2,
-   28.67
+   0.29,
+   1.66,
+   3.79,
+   26.47,
+   28.94
   ],
   "activos": [
    {
     "t": "VB",
     "peso": 25.0,
     "nombre": "Small caps EE.UU.",
-    "r12m": 14.96
+    "r12m": 15.62
    },
    {
     "t": "MTUM",
     "peso": 25.0,
     "nombre": "Factor momentum",
-    "r12m": 27.84
+    "r12m": 27.97
    },
    {
     "t": "QUAL",
     "peso": 25.0,
     "nombre": "Factor calidad",
-    "r12m": 15.35
+    "r12m": 16.12
    },
    {
     "t": "VLUE",
     "peso": 25.0,
     "nombre": "Factor valor",
-    "r12m": 56.55
+    "r12m": 56.05
    }
   ],
   "totalActivos": 4,
@@ -486,42 +486,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Largo plazo",
   "ret": [
-   1.17,
-   2.56,
-   13.83,
-   35.99,
-   26.52
+   1.24,
+   3.95,
+   15.3,
+   37.5,
+   27.89
   ],
   "activos": [
    {
     "t": "NVDA",
     "peso": 25.0,
     "nombre": "Nvidia",
-    "r12m": 16.25
+    "r12m": 18.26
    },
    {
     "t": "CHAT",
     "peso": 25.0,
     "nombre": "Inteligencia artificial (temático)",
-    "r12m": 46.05
+    "r12m": 46.2
    },
    {
     "t": "SMH",
     "peso": 20.0,
     "nombre": "Semiconductores",
-    "r12m": 74.3
+    "r12m": 75.16
    },
    {
     "t": "IGV",
     "peso": 20.0,
     "nombre": "Software",
-    "r12m": -6.37
+    "r12m": -4.99
    },
    {
     "t": "VST",
     "peso": 10.0,
     "nombre": "Vistra (energía eléctrica)",
-    "r12m": -26.43
+    "r12m": -22.61
    }
   ],
   "totalActivos": 5,
@@ -540,42 +540,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "conservative",
   "plazo": "Mediano plazo",
   "ret": [
-   -0.1,
-   0.07,
-   -0.95,
-   -0.49,
-   -0.1
+   -0.02,
+   0.05,
+   -0.97,
+   -0.5,
+   -0.11
   ],
   "activos": [
    {
     "t": "SGOV",
     "peso": 40.0,
     "nombre": "Letras del Tesoro (0-3 meses)",
-    "r12m": 3.42
+    "r12m": 3.44
    },
    {
     "t": "SHY",
     "peso": 25.0,
     "nombre": "Tesoro EE.UU. 1-3 años",
-    "r12m": 1.23
+    "r12m": 1.27
    },
    {
     "t": "LQD",
     "peso": 20.0,
     "nombre": "Corporativos grado de inversión",
-    "r12m": -4.13
+    "r12m": -4.09
    },
    {
     "t": "IEF",
     "peso": 10.0,
     "nombre": "Tesoro EE.UU. 7-10 años",
-    "r12m": -4.38
+    "r12m": -4.52
    },
    {
     "t": "TLT",
     "peso": 5.0,
     "nombre": "Tesoro EE.UU. +20 años",
-    "r12m": -10.22
+    "r12m": -10.64
    }
   ],
   "totalActivos": 5,
@@ -593,30 +593,30 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Largo plazo",
   "ret": [
-   1.14,
-   -0.96,
-   -11.49,
-   -17.77,
-   -8.03
+   0.57,
+   0.23,
+   -10.28,
+   -16.21,
+   -6.28
   ],
   "activos": [
    {
     "t": "MOH",
     "peso": 43.49,
     "nombre": "Molina Healthcare",
-    "r12m": 22.21
+    "r12m": 26.78
    },
    {
     "t": "LULU",
     "peso": 32.35,
     "nombre": "Lululemon",
-    "r12m": -44.66
+    "r12m": -45.39
    },
    {
     "t": "SLM",
     "peso": 24.16,
     "nombre": "SLM Corporation",
-    "r12m": -13.41
+    "r12m": -13.43
    }
   ],
   "totalActivos": 3,
@@ -637,42 +637,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "aggressive",
   "plazo": "Largo plazo",
   "ret": [
-   0.6,
-   0.25,
-   0.31,
-   17.26,
-   18.63
+   3.45,
+   4.2,
+   4.25,
+   21.82,
+   23.36
   ],
   "activos": [
    {
     "t": "MCHI",
     "peso": 25.0,
     "nombre": "Acciones de China",
-    "r12m": -17.93
+    "r12m": -16.2
    },
    {
     "t": "INDA",
     "peso": 18.0,
     "nombre": "Acciones de India",
-    "r12m": -13.87
+    "r12m": -13.71
    },
    {
     "t": "EWZ",
     "peso": 15.0,
     "nombre": "Acciones de Brasil",
-    "r12m": 26.61
+    "r12m": 44.08
    },
    {
     "t": "EWT",
     "peso": 12.0,
     "nombre": "Acciones de Taiwán",
-    "r12m": 81.75
+    "r12m": 85.18
    },
    {
     "t": "EWY",
     "peso": 10.0,
     "nombre": "Acciones de Corea del Sur",
-    "r12m": 101.02
+    "r12m": 101.81
    }
   ],
   "totalActivos": 8,
@@ -694,41 +694,41 @@ const ESTRATEGIAS = [
   "plazo": "Largo plazo",
   "ret": [
    0.46,
-   0.44,
-   -1.43,
-   13.0,
-   15.84
+   1.01,
+   -0.87,
+   13.64,
+   16.5
   ],
   "activos": [
    {
     "t": "SCHD",
     "peso": 25.0,
     "nombre": "Dividendos de calidad",
-    "r12m": 26.49
+    "r12m": 26.61
    },
    {
     "t": "VIG",
     "peso": 25.0,
     "nombre": "Dividendos crecientes",
-    "r12m": 9.92
+    "r12m": 10.56
    },
    {
     "t": "DGRO",
     "peso": 20.0,
     "nombre": "Crecimiento de dividendos",
-    "r12m": 13.49
+    "r12m": 14.0
    },
    {
     "t": "IDVO",
     "peso": 15.0,
     "nombre": "Dividendos internacionales + opciones",
-    "r12m": 16.32
+    "r12m": 18.06
    },
    {
     "t": "DIVO",
     "peso": 15.0,
     "nombre": "Dividendos + covered calls",
-    "r12m": 10.62
+    "r12m": 11.29
    }
   ],
   "totalActivos": 5,
@@ -748,42 +748,42 @@ const ESTRATEGIAS = [
   "riesgoKey": "conservative",
   "plazo": "Largo plazo",
   "ret": [
-   -0.04,
-   0.21,
-   0.98,
-   2.56,
-   4.6
+   0.11,
+   0.36,
+   1.14,
+   2.74,
+   4.78
   ],
   "activos": [
    {
     "t": "VTI",
     "peso": 25.0,
     "nombre": "Acciones EE.UU. (mercado total)",
-    "r12m": 13.99
+    "r12m": 14.77
    },
    {
     "t": "GLD",
     "peso": 25.0,
     "nombre": "Oro físico",
-    "r12m": 3.08
+    "r12m": 3.1
    },
    {
     "t": "SGOV",
     "peso": 25.0,
     "nombre": "Letras del Tesoro (0-3 meses)",
-    "r12m": 3.42
+    "r12m": 3.44
    },
    {
     "t": "BND",
     "peso": 15.0,
     "nombre": "Bonos EE.UU.",
-    "r12m": -2.39
+    "r12m": -2.47
    },
    {
     "t": "BNDX",
     "peso": 10.0,
     "nombre": "Bonos globales cubiertos",
-    "r12m": -1.65
+    "r12m": -1.79
    }
   ],
   "totalActivos": 5,
