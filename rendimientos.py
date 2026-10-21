@@ -1,5 +1,4 @@
-
-import os, json, sys
+import os, json, sys, time
 import pandas as pd, yfinance as yf
 import matplotlib
 matplotlib.use("Agg")           # sin pantalla: corre en un servidor
@@ -7,7 +6,17 @@ import matplotlib.pyplot as plt
 
 # ============================== AJUSTES ==============================
 TZ         = "America/Argentina/Cordoba"
+NY         = "America/New_York"   # referencia horaria del mercado, no del servidor
 MESES_HIST = 15          # historia a descargar. Tiene que ser > 13 para la ventana de 12 meses.
+
+# Descarga: serializada y con reintentos (ver nota en DESCARGA DE PRECIOS)
+CACHE_TZ   = os.environ.get("YF_TZ_CACHE", "/tmp/yf-tz-cache")
+INTENTOS   = 3           # reintentos de los tickers que vuelvan vacíos
+ESPERA     = 5           # segundos base entre reintentos; se multiplica por el intento
+
+# Cierre de Wall Street, para decidir si la última barra es una rueda cerrada
+CIERRE_NY  = 16          # 16:00 de Nueva York
+GRACIA_MIN = 20          # margen para que Yahoo consolide la barra del día
 
 # Estos dos salen de los Secrets del repo (Settings -> Secrets and variables -> Actions)
 SHEET_URL  = os.environ.get("SHEET_URL", "")
@@ -33,34 +42,113 @@ MESES_ES = {1:"enero", 2:"febrero", 3:"marzo", 4:"abril", 5:"mayo", 6:"junio",
 
 # ====================== FECHAS: SE CALCULAN SOLAS ======================
 # No hay ninguna fecha escrita a mano en todo el script: todo sale de la fecha de hoy.
-HOY     = pd.Timestamp.now(tz=TZ).tz_localize(None).normalize()
+AHORA   = pd.Timestamp.now(tz=TZ)
+HOY     = AHORA.tz_localize(None).normalize()
 START   = (HOY - pd.DateOffset(months=MESES_HIST)).replace(day=1).strftime("%Y-%m-%d")
 END     = (HOY + pd.Timedelta(days=1)).strftime("%Y-%m-%d")   # END es exclusivo: sumar 1 día incluye hoy
 TICKERS = sorted({t for p in PORTFOLIOS.values() for t in p})
-print(f"Corrida del {HOY:%d/%m/%Y} · {len(TICKERS)} tickers desde {START}")
+print(f"Corrida del {AHORA:%d/%m/%Y %H:%M} ({TZ}) · {len(TICKERS)} tickers desde {START}")
 
 # ========================= DESCARGA DE PRECIOS =========================
-raw = yf.download(TICKERS, start=START, end=END, auto_adjust=True,
-                  progress=False, group_by="column")
+# yfinance mantiene un caché SQLite con la zona horaria de cada ticker. Si la
+# descarga corre multihilo (threads=True, que es el default), dos hilos escriben
+# ese archivo a la vez y SQLite devuelve OperationalError('database is locked'):
+# el ticker que pierde la carrera vuelve vacío y el script aborta. Es una
+# condición de carrera, por eso fallaba una de cada tres corridas sin que
+# cambiara nada. threads=False la elimina a cambio de unos segundos más.
+try:
+    os.makedirs(CACHE_TZ, exist_ok=True)
+    yf.set_tz_cache_location(CACHE_TZ)
+except Exception as e:
+    print(f"[aviso] no se pudo fijar el caché de zonas horarias ({e}); sigo igual.")
 
-if isinstance(raw.columns, pd.MultiIndex):
-    px = raw["Close"].copy()
-else:
-    px = raw[["Close"]].copy(); px.columns = TICKERS
+def bajar(tickers):
+    """Close ajustado de `tickers`, una columna por ticker. DataFrame vacío si falla todo."""
+    raw = yf.download(tickers, start=START, end=END, auto_adjust=True,
+                      progress=False, group_by="column", threads=False)
+    if raw is None or len(raw) == 0:
+        return pd.DataFrame()
+    if isinstance(raw.columns, pd.MultiIndex):
+        return raw["Close"].copy()
+    out = raw[["Close"]].copy()
+    out.columns = list(tickers)
+    return out
 
-px = px.dropna(how="all").ffill()
+def pendientes(df):
+    return [t for t in TICKERS if t not in df.columns or df[t].isna().all()]
+
+px     = bajar(TICKERS)
+faltan = pendientes(px)
+
+for intento in range(1, INTENTOS + 1):
+    if not faltan:
+        break
+    espera = ESPERA * intento
+    print(f"[reintento {intento}/{INTENTOS}] sin datos para {faltan} · espero {espera}s")
+    time.sleep(espera)
+    extra = bajar(faltan)
+    if len(px) == 0:
+        px = extra
+    else:
+        for t in faltan:
+            if t in extra.columns and not extra[t].isna().all():
+                px[t] = extra[t]
+    faltan = pendientes(px)
+
+if faltan:
+    raise RuntimeError(
+        f"Yahoo no devolvió datos para {faltan} después de {INTENTOS} reintentos. "
+        "Puede ser un ticker dado de baja o una falla transitoria de Yahoo: "
+        "revisalo antes de publicar."
+    )
+print(f"OK: datos completos para {len(TICKERS)} tickers")
+
+px = px.dropna(how="all")
 px.index = pd.to_datetime(px.index)
 px = px.sort_index()
 
-faltan = [t for t in TICKERS if t not in px.columns or px[t].isna().all()]
-if faltan:
-    raise RuntimeError(f"Yahoo no devolvió datos para: {faltan}. Revisá los tickers antes de publicar.")
-print(f"OK: datos completos para {len(TICKERS)} tickers")
+# Aviso (no corta): algún ticker dejó de reportar antes que el resto. El ffill de
+# abajo lo tapa con el precio anterior, así que su retorno del día daría 0 sin avisar.
+if len(px):
+    ultimo_dato = px.apply(lambda s: s.last_valid_index())
+    rezagados   = ultimo_dato[ultimo_dato < px.index[-1]]
+    if len(rezagados):
+        print("[aviso] tickers sin dato en la última rueda (se completan con el anterior):")
+        for t, f in rezagados.items():
+            print(f"    · {t}: último dato {f:%d/%m/%Y}")
+
+px = px.ffill()
+
+# ================= DESCARTE DE LA RUEDA EN CURSO =================
+# El cron pide las 09:20 de Argentina, pero GitHub encola los `schedule` y los
+# larga cuando tiene capacidad: en la práctica han salido entre las 13:46 y las
+# 18:18, casi siempre con Wall Street operando. En ese caso Yahoo devuelve la
+# barra del día EN CURSO y el script la tomaba como si fuera un cierre. Acá se
+# descarta cualquier barra cuya sesión todavía no haya cerrado en Nueva York,
+# así el resultado es correcto sin importar a qué hora corra el job.
+AHORA_NY = pd.Timestamp.now(tz=NY)
+
+def rueda_cerrada(fecha):
+    """True si la sesión de `fecha` ya cerró en Nueva York (con margen de gracia)."""
+    if fecha.date() < AHORA_NY.date():
+        return True
+    if fecha.date() > AHORA_NY.date():
+        return False
+    cierre = AHORA_NY.normalize() + pd.Timedelta(hours=CIERRE_NY, minutes=GRACIA_MIN)
+    return AHORA_NY >= cierre
+
+descartada = None
+while len(px) and not rueda_cerrada(px.index[-1]):
+    descartada = px.index[-1]
+    px = px.iloc[:-1]
+    print(f"[corrección] la rueda del {descartada:%d/%m/%Y} todavía no cerró en Nueva York "
+          f"(allá son las {AHORA_NY:%H:%M}): se descarta la barra en curso.")
+
+if len(px) < 2:
+    raise RuntimeError("Quedan menos de dos ruedas cerradas: no se puede calcular 'En el dia'.")
 
 D_LAST, D_PREV = px.index[-1], px.index[-2]
-print(f"Última rueda disponible: {D_LAST:%d/%m/%Y}  (anterior: {D_PREV:%d/%m/%Y})")
-if (HOY - D_LAST).days >= 1:
-    print(f"[nota] Todavía no cerró la rueda de hoy: el cálculo usa el cierre del {D_LAST:%d/%m/%Y}.")
+print(f"Última rueda CERRADA: {D_LAST:%d/%m/%Y}  (anterior: {D_PREV:%d/%m/%Y})")
 
 # ===================== VENTANAS: TAMBIÉN AUTOMÁTICAS =====================
 # Las ventanas se derivan del mes de la última rueda, no de una lista fija de meses.
@@ -132,14 +220,17 @@ for nombre, pesos in PORTFOLIOS.items():
         det.append(fila)
 detalle = pd.DataFrame(det)
 
+estado_cierre = ("Si" if descartada is None
+                 else f"Si - se descarto la rueda en curso del {descartada:%d/%m/%Y}")
+
 resumen = pd.DataFrame({
     "Campo": ["Corrida", "Ultima rueda", "Rueda anterior", "Tickers", "Carteras",
-              "Moneda", "Metodologia", "Fuente"],
-    "Valor": [HOY.strftime("%d/%m/%Y %H:%M"), D_LAST.strftime("%d/%m/%Y"),
+              "Moneda", "Metodologia", "Fuente", "Cierre confirmado"],
+    "Valor": [AHORA.strftime("%d/%m/%Y %H:%M"), D_LAST.strftime("%d/%m/%Y"),
               D_PREV.strftime("%d/%m/%Y"), len(TICKERS), len(PORTFOLIOS), "USD",
               "Retorno total simple sobre precios ajustados (dividendos y splits reinvertidos). "
               "Cartera = promedio ponderado de sus activos, rebalanceada al inicio de cada ventana.",
-              "Yahoo Finance via yfinance"],
+              "Yahoo Finance via yfinance", estado_cierre],
 })
 
 pd.set_option("display.max_rows", 250); pd.set_option("display.width", 250)
